@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack;
 /* 26 */     if ((event.getOldCurrent() == 0) || (event.getNewCurrent() != 0)) disable = false;
 /* 27 */     else if ((event.getOldCurrent() != 0) || (event.getNewCurrent() == 0)) disable = true; else
 /* 28 */       return;
-/* 29 */     ArrayList checkSigns;
+/* 29 */     ArrayList checkSigns = new ArrayList();
 /* 30 */     if ((event.getBlock().getRelative(1, 0, 0).getType() == Material.WALL_SIGN) && 
 /* 31 */       (((org.bukkit.material.Sign)event.getBlock().getRelative(1, 0, 0).getState().getData()).getFacing() == BlockFace.NORTH))
 /* 32 */       checkSigns.add(event.getBlock().getRelative(1, 0, 0));
