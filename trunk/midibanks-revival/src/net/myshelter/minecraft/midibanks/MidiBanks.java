@@ -1,4 +1,4 @@
-/*     */package net.myshelter.minecraft.midibanks;
+package net.myshelter.minecraft.midibanks;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,83 +29,67 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import net.myshelter.minecraft.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class MidiBanks extends JavaPlugin
-/*     */implements IAttributePlugin
-/*     */{
-	/*     */protected MidiBanksBlockListener listener;
-	/*     */protected MidiBanksPlayerListener plistener;
-	/*     */protected MidiBanksWorldListener wlistener;
-	/*     */protected Timer player;
-	/*     */protected ArrayList<SongInstance> songs;
+public class MidiBanks extends JavaPlugin implements IAttributePlugin {
+	protected MidiBanksBlockListener listener;
+	protected MidiBanksPlayerListener plistener;
+	protected MidiBanksWorldListener wlistener;
+	protected Timer player;
+	protected ArrayList<SongInstance> songs;
 	/* 72 */protected static final Logger log = Logger.getLogger("Minecraft");
-	/*     */public static final int tempo = 20;
+	public static final int tempo = 20;
 	/* 79 */boolean disallowAutostart = false;
 	/* 80 */boolean disallowLoop = false;
 	/* 81 */boolean redstone = true;
-	/*     */public OutputPinHandler pinHandler;
-	/*     */IAttributeProvider varProvider;
+	public OutputPinHandler pinHandler;
+	IAttributeProvider varProvider;
 
-	/*     */
-	/*     */protected static void dolog(String msg)
-	/*     */{
+	protected static void dolog(String msg) {
 		log.info("[MidiBanks] " + msg);
-		/*     */}
+	}
 
-	/*     */
-	/*     */public void setProvider(String forService, IAttributeProvider provider)
-	/*     */{
+	public void setProvider(String forService, IAttributeProvider provider) {
 		/* 88 */if ((forService != null) && (forService != ""))
 			return;
 		/* 89 */this.varProvider = provider.getNamespace("midibanks");
-		/*     */}
+	}
 
-	/*     */
-	/*     */public IAttributeProvider getProvider(String forService) {
+	public IAttributeProvider getProvider(String forService) {
 		/* 93 */if ((forService != null) && (forService != ""))
 			return null;
 		/* 94 */return this.varProvider;
-		/*     */}
+	}
 
-	/*     */
-	/*     */public void onEnable() {
+	public void onEnable() {
 		/* 98 */this.varProvider = new MidiBanksAttributeProvider(this, "");
 		/* 99 */if (!getDataFolder().exists())
 			getDataFolder().mkdir();
-		/*     */
+
 		/* 101 */this.listener = new MidiBanksBlockListener(this);
 		/* 102 */this.plistener = new MidiBanksPlayerListener(this);
 		/* 103 */this.wlistener = new MidiBanksWorldListener(this);
 		/* 104 */this.songs = new ArrayList();
-		/*     */
+
 		/* 106 */this.disallowAutostart = getConfig().getBoolean(
 				"disallow-autostart", false);
 		/* 107 */this.disallowLoop = getConfig().getBoolean("disallow-loop",
 				false);
 		/* 108 */this.redstone = getConfig().getBoolean("redstone", true);
-		/*     */
+
 		/* 110 */this.pinHandler = new MidiBanksOutputPinHandler(this.redstone);
-		/*     */
+
 		/* 112 */resetPlayer();
-		/* 113 */getServer().getPluginManager().registerEvents(plistener,this);
-		/* 114 */getServer().getPluginManager().registerEvents(listener,this);
-		/* 115 */getServer().getPluginManager().registerEvents(listener,this);
-		/* 116 */getServer().getPluginManager().registerEvents(wlistener,this);
-		/* 117 */getServer().getPluginManager().registerEvents(wlistener,this);
+		/* 113 */getServer().getPluginManager().registerEvents(plistener, this);
+		/* 114 */getServer().getPluginManager().registerEvents(listener, this);
+		/* 115 */getServer().getPluginManager().registerEvents(listener, this);
+		/* 116 */getServer().getPluginManager().registerEvents(wlistener, this);
+		/* 117 */getServer().getPluginManager().registerEvents(wlistener, this);
 		/* 118 */dolog("Enabled! Version is " + getDescription().getVersion());
-		/*     */
+
 		/* 120 */if (this.disallowAutostart)
 			return;
-		/*     */
+
 		/* 123 */dolog("Auto-starting A banks in currently loaded chunks...");
 		/* 124 */int count = 0;
 		/* 125 */for (World w : getServer().getWorlds()) {
@@ -120,34 +104,31 @@ public class MidiBanks extends JavaPlugin
 							continue;
 						/* 132 */learnMusic(midiSign);
 						/* 133 */count++;
-						/*     */}
-				/*     */}
-			/*     */}
+					}
+			}
+		}
 		/* 137 */dolog("Done; found " + count + " A banks.");
-		/*     */}
+	}
 
-	/*     */
-	/*     */public void onDisable() {
+	public void onDisable() {
 		/* 141 */this.player.cancel();
 		/* 142 */dolog("Disabled.");
-		/*     */}
+	}
 
-	/*     */
-	/*     */public void resetPlayer() {
+	public void resetPlayer() {
 		/* 146 */this.songs.clear();
 		/* 147 */this.player = new Timer();
 		/* 148 */MidiPlayerStep np = new MidiPlayerStep(this);
 		/* 149 */this.player.schedule(np, 20L, 20L);
-		/*     */}
+	}
 
-	/*     */
-	/*     */public File getMidiFile(String name) {
+	public File getMidiFile(String name) {
 		/* 153 */File midiFile = new File(getDataFolder() + "/" + name + ".mid");
 		/* 154 */if (!midiFile.exists()) {
 			/* 155 */Stack dirs = new Stack();
 			/* 156 */dirs.push(getDataFolder());
-			/*     */try {
-				/*     */while (true) {
+			try {
+				while (true) {
 					/* 159 */File thisdir = (File) dirs.pop();
 					/* 160 */midiFile = new File(thisdir + "/" + name + ".mid");
 					/* 161 */if (midiFile.exists())
@@ -156,24 +137,21 @@ public class MidiBanks extends JavaPlugin
 						/* 163 */for (File dircontent : thisdir.listFiles())
 							/* 164 */if (dircontent.isDirectory())
 								/* 165 */dirs.push(dircontent);
-					/*     */}
-				/*     */} catch (EmptyStackException localEmptyStackException) {
-				/*     */} catch (NullPointerException localNullPointerException) {
-				/*     */}
-			/*     */}
+				}
+			} catch (EmptyStackException localEmptyStackException) {
+			} catch (NullPointerException localNullPointerException) {
+			}
+		}
 		/* 171 */if (midiFile.exists())
 			return midiFile;
 		/* 172 */return null;
-		/*     */}
+	}
 
-	/*     */
-	/*     */public void learnMusic(org.bukkit.block.Sign midiSign)
-	/*     */{
+	public void learnMusic(org.bukkit.block.Sign midiSign) {
 		/* 186 */learnMusic(midiSign, false);
-		/*     */}
+	}
 
-	/*     */protected void learnMusic(org.bukkit.block.Sign midiSign,
-			boolean fromRS) {
+	protected void learnMusic(org.bukkit.block.Sign midiSign, boolean fromRS) {
 		/* 189 */if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]"))
 			return;
 		/* 190 */stopMusic(midiSign);
@@ -188,7 +166,7 @@ public class MidiBanks extends JavaPlugin
 		boolean display = false;
 		boolean remrep = false;
 		boolean repOctave = false;
-		/*     */
+
 		/* 196 */ArrayList checkRedstone = new ArrayList();
 		/* 197 */if (((org.bukkit.material.Sign) midiSign.getData())
 				.getFacing() == BlockFace.NORTH)
@@ -216,7 +194,7 @@ public class MidiBanks extends JavaPlugin
 				/* 218 */File midiFile = getMidiFile(midiSign.getLine(2));
 				/* 219 */if (midiFile == null)
 					return;
-				/*     */
+
 				/* 221 */String settings = midiSign.getLine(3);
 				/* 222 */Pattern pNextSign = Pattern.compile("N([lrud])");
 				/* 223 */Matcher mNextSign = pNextSign.matcher(midiSign
@@ -251,20 +229,20 @@ public class MidiBanks extends JavaPlugin
 						/* 238 */settings = "";
 						/* 239 */for (int i = 0; i < 4; i++)
 							settings = settings + setSign.getLine(i);
-						/*     */}
-					/*     */}
-				/*     */
+					}
+				}
+
 				/* 243 */Pattern pTrack = Pattern.compile("T([0-9a-f]+)");
 				/* 244 */Matcher mTrack = pTrack.matcher(settings);
 				/* 245 */if (mTrack.find())
 					track = Integer.parseInt(mTrack.group(1), 16);
-				/*     */
+
 				/* 247 */Pattern pChans = Pattern
 						.compile("=([0123456789abcdeflmnosz ]+)");
 				/* 248 */Matcher mChans = pChans.matcher(settings);
 				/* 249 */if (mChans.find())
 					chans = mChans.group(1);
-				/*     */
+
 				/* 251 */Pattern pTempo = Pattern.compile("(<|>)([2-9])");
 				/* 252 */Matcher mTempo = pTempo.matcher(settings);
 				/* 253 */if (mTempo.find()) {
@@ -272,7 +250,7 @@ public class MidiBanks extends JavaPlugin
 						tempoCoef = 1.0D / Integer.parseInt(mTempo.group(2));
 					/* 255 */if (mTempo.group(1).equals(">"))
 						tempoCoef = Integer.parseInt(mTempo.group(2));
-					/*     */}
+				}
 				/* 257 */Pattern pFineTempo = Pattern
 						.compile("(\\{|\\})([1-9])");
 				/* 258 */Matcher mFineTempo = pFineTempo.matcher(settings);
@@ -281,18 +259,18 @@ public class MidiBanks extends JavaPlugin
 						tempoCoef -= Integer.parseInt(mFineTempo.group(2)) / 10.0D;
 					/* 261 */if (mFineTempo.group(1).equals("}"))
 						tempoCoef += Integer.parseInt(mFineTempo.group(2)) / 10.0D;
-					/*     */}
-				/*     */
+				}
+
 				/* 264 */Pattern pInstrument = Pattern.compile("I([0-9])");
 				/* 265 */Matcher mInstrument = pInstrument.matcher(settings);
 				/* 266 */if (mInstrument.find())
 					instrument = Integer.parseInt(mInstrument.group(1));
-				/*     */
+
 				/* 268 */Pattern pWindow = Pattern.compile("W([0-9])");
 				/* 269 */Matcher mWindow = pWindow.matcher(settings);
 				/* 270 */if (mWindow.find())
 					window = Integer.parseInt(mWindow.group(1));
-				/*     */
+
 				/* 272 */if (settings.contains("C"))
 					chanCollapse = true;
 				/* 273 */if (settings.contains("S"))
@@ -305,11 +283,11 @@ public class MidiBanks extends JavaPlugin
 					remrep = true;
 				/* 277 */if (settings.contains("R"))
 					repOctave = true;
-				/*     */
+
 				/* 279 */Sequence midi = MidiSystem.getSequence(midiFile);
 				/* 280 */if (midi.getTracks().length <= track)
 					return;
-				/*     */
+
 				/* 282 */if (!settings.contains("O")) {
 					/* 283 */int realTempo = 0;
 					/* 284 */Track first = midi.getTracks()[0];
@@ -321,14 +299,14 @@ public class MidiBanks extends JavaPlugin
 							/* 288 */for (int j = 3; j < 6; j++) {
 								/* 289 */realTempo <<= 8;
 								/* 290 */realTempo += bf[j];
-								/*     */}
+							}
 							/* 292 */break;
-							/*     */}
+						}
 					/* 294 */if (realTempo > 0)
 						tempoCoef *= 500000.0D / realTempo * 0.8D;
-					/*     */
-					/*     */}
-				/*     */
+
+				}
+
 				/* 298 */if (track < 0) {
 					/* 299 */for (int i = 0; i < midi.getTracks().length; i++) {
 						/* 300 */SongInstance si = new SongInstance(this,
@@ -346,8 +324,8 @@ public class MidiBanks extends JavaPlugin
 						/* 310 */si.repOctave = repOctave;
 						/* 311 */si.instrument = Integer.valueOf(instrument);
 						/* 312 */this.songs.add(si);
-						/*     */}
-					/*     */} else {
+					}
+				} else {
 					/* 315 */SongInstance si = new SongInstance(this, midiSign,
 							midi.getTracks()[track], chans);
 					/* 316 */si.track = track;
@@ -363,23 +341,22 @@ public class MidiBanks extends JavaPlugin
 					/* 325 */si.repOctave = repOctave;
 					/* 326 */si.instrument = Integer.valueOf(instrument);
 					/* 327 */this.songs.add(si);
-					/*     */}
+				}
 				/* 329 */midiSign.setLine(0, "PLAYING");
-				/*     */} catch (InvalidMidiDataException imde) {
+			} catch (InvalidMidiDataException imde) {
 				/* 331 */midiSign.setLine(0, "NOT A MIDI");
-				/*     */} catch (IOException ioe) {
+			} catch (IOException ioe) {
 				/* 333 */midiSign.setLine(0, "CAN'T READ FILE");
-				/*     */}
+			}
 		else {
 			/* 335 */midiSign.setLine(0, "BAD FILENAME");
-			/*     */}
+		}
 		/* 337 */getServer().getScheduler().scheduleSyncDelayedTask(this,
 				new UpdateSign(midiSign));
-		/*     */}
+	}
 
-	/*     */
-	/*     */public void stopMusic(org.bukkit.block.Sign midiSign) {
-		/*     */try {
+	public void stopMusic(org.bukkit.block.Sign midiSign) {
+		try {
 			/* 342 */for (int i = 0; i < this.songs.size(); i++) {
 				/* 343 */if (midiSign
 						.getBlock()
@@ -388,17 +365,16 @@ public class MidiBanks extends JavaPlugin
 								.getBlock().getLocation())) {
 					/* 344 */this.songs.remove(i);
 					/* 345 */i--;
-					/*     */}
-				/*     */}
+				}
+			}
 			/* 348 */midiSign.setLine(0, "");
 			/* 349 */getServer().getScheduler().scheduleSyncDelayedTask(this,
 					new UpdateSign(midiSign));
 		} catch (NullPointerException localNullPointerException) {
-			/*     */}
-		/*     */}
+		}
+	}
 
-	/*     */
-	/*     */public boolean onCommand(CommandSender sender, Command command,
+	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		/* 354 */if (!command.getName().equalsIgnoreCase("midi"))
 			return false;
@@ -413,10 +389,10 @@ public class MidiBanks extends JavaPlugin
 		/* 359 */if ((args[0].equalsIgnoreCase("halt")) && (admin)) {
 			/* 360 */this.player.cancel();
 			/* 361 */resetPlayer();
-			/*     */}
-		/*     */int[] chans = null;
-		/*     */int b;
-		/*     */File[] t = null;
+		}
+		int[] chans = null;
+		int b;
+		File[] t = null;
 		/* 363 */if ((args[0].equalsIgnoreCase("check")) && (args.length >= 2)
 				&& (cannormalcmd)) {
 			/* 364 */Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
@@ -427,9 +403,8 @@ public class MidiBanks extends JavaPlugin
 					/* 368 */if (midiFile == null)
 						return true;
 					/* 369 */Sequence midi = MidiSystem.getSequence(midiFile);
-					/*     */int i = 0;
-					/* 370 */if (args.length >= 3)
-					/*     */{
+					int i = 0;
+					/* 370 */if (args.length >= 3) {
 						/* 372 */int track = Integer.parseInt(args[2], 16);
 						/* 373 */if ((track >= 0)
 								&& (track < midi.getTracks().length)) {
@@ -450,8 +425,8 @@ public class MidiBanks extends JavaPlugin
 									/* 382 */count++;
 									/* 383 */chans[(t1.get(i1).getMessage()
 											.getStatus() & 0xF)] += 1;
-									/*     */}
-								/*     */}
+								}
+							}
 							/* 386 */label = "";
 							/* 387 */for (i = 0; i < chans.length; i++) {
 								/* 388 */if (chans[i] > 0) {
@@ -459,18 +434,18 @@ public class MidiBanks extends JavaPlugin
 									/* 390 */label = label
 											+ Integer.toHexString(i) + ":"
 											+ chans[i] + " ";
-									/*     */}
-								/*     */}
+								}
+							}
 							/* 393 */sender.sendMessage("Note ONs: " + count
 									+ " (" + chanc + " channel(s) used)");
 							/* 394 */sender.sendMessage(label);
-							
-							/*     */}
+
+						}
 						/* 396 */sender
 								.sendMessage("No such track in this sequence.");
-						
-						/*     */}
-					/*     */
+
+					}
+
 					/* 400 */sender.sendMessage("== MIDI Sequence " + args[1]
 							+ ".mid ==");
 					/* 401 */Double secs = Double.valueOf(midi
@@ -484,13 +459,13 @@ public class MidiBanks extends JavaPlugin
 					String midilegth = midi.getTracks().length + "";
 					/* 404 */String bychan = (midistring = midilegth);
 					for (chans = null; chans.length < bychan.length(); chans = null) {
-						
+
 						/* 405 */if (t.length > 20)
 							a++;
 						/* 406 */if (t.length >= 0.8D * midi.getTickLength())
 							continue;
 						b++;
-						/*     */}
+					}
 					/* 408 */sender.sendMessage("Tracks: "
 							+ midi.getTracks().length + " total, " + a
 							+ " significant, " + b + " long");
@@ -525,29 +500,28 @@ public class MidiBanks extends JavaPlugin
 												.getResolution() * 30)) })
 								+ "ms)");
 					/* 417 */if (midi.getDivisionType() != 29.969999F)
-						
-					sender.sendMessage("Tempo: "
-							+ midi.getResolution()
-							* 29.969999999999999D
-							+ " tick/s (est. tick length "
-							+ String.format(
-									"%.2f",
-									new Object[] { Double.valueOf(1000.0D / (midi
-											.getResolution() * 29.969999999999999D)) })
-							+ "ms)");
-					/*     */}
-				/*     */catch (InvalidMidiDataException imde) {
+
+						sender.sendMessage("Tempo: "
+								+ midi.getResolution()
+								* 29.969999999999999D
+								+ " tick/s (est. tick length "
+								+ String.format(
+										"%.2f",
+										new Object[] { Double.valueOf(1000.0D / (midi
+												.getResolution() * 29.969999999999999D)) })
+								+ "ms)");
+				} catch (InvalidMidiDataException imde) {
 					/* 421 */sender
 							.sendMessage("Error reading MIDI data. Is this a MIDI file?");
-					/*     */} catch (IOException ioe) {
+				} catch (IOException ioe) {
 					/* 423 */sender.sendMessage("No such file!");
-					/*     */}
+				}
 			else
 				/* 425 */sender
 						.sendMessage("Invalid filename. Filenames can only have letters, numbers, underscores and dashes.");
-			/*     */}
-		/*     */
-		/*     */int i;
+		}
+
+		int i;
 		/* 428 */if ((args[0].equalsIgnoreCase("channels"))
 				&& (args.length >= 2) && (cannormalcmd)) {
 			/* 429 */Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
@@ -568,31 +542,31 @@ public class MidiBanks extends JavaPlugin
 							/* 440 */if (t1.get(i1).getMessage().getStatus() >> 4 == 9)
 								/* 441 */chans1[(t1.get(i1).getMessage()
 										.getStatus() & 0xF)] = true;
-							/*     */}
-						/*     */}
+						}
+					}
 					/* 444 */for (i = 0; i < chans1.length; i++) {
 						/* 446 */if (chans1[i] != false) {
 						}
-						/*     */}
+					}
 					/* 449 */sender.sendMessage("Used: " + label);
-					/*     */} catch (InvalidMidiDataException imde) {
+				} catch (InvalidMidiDataException imde) {
 					/* 451 */sender
 							.sendMessage("Error reading MIDI data. Is this a MIDI file?");
-					/*     */} catch (IOException ioe) {
+				} catch (IOException ioe) {
 					/* 453 */sender.sendMessage("No such file!");
-					/*     */}
+				}
 			else {
 				/* 455 */sender
 						.sendMessage("Invalid filename. Filenames can only have letters, numbers, underscores and dashes.");
-				/*     */}
-			/*     */}
+			}
+		}
 		/* 458 */if ((args[0].equalsIgnoreCase("list")) && (cannormalcmd)) {
 			/* 459 */String result = "";
 			/* 460 */HashSet names = new HashSet();
 			/* 461 */Stack dirs = new Stack();
 			/* 462 */dirs.push(getDataFolder());
-			/*     */try {
-				/*     */while (true) {
+			try {
+				while (true) {
 					/* 465 */File thisdir = (File) dirs.pop();
 					/* 466 */i = (t = thisdir.listFiles()).length;
 					for (label = 0 + ""; label.length() < i; label.charAt(i++)) {
@@ -603,21 +577,20 @@ public class MidiBanks extends JavaPlugin
 							/* 470 */names.add(dircontent.getName().substring(
 									0, dircontent.getName().length() - 4));
 					}
-					/*     */}
-				/*     */} catch (EmptyStackException localEmptyStackException) {
-				/*     */}
-			/*     */catch (NullPointerException localNullPointerException) {
-				/*     */}
+				}
+			} catch (EmptyStackException localEmptyStackException) {
+			} catch (NullPointerException localNullPointerException) {
+			}
 			/* 476 */ArrayList sortNames = new ArrayList();
 			/* 477 */sortNames.addAll(names);
 			/* 478 */Collections.sort(sortNames);
 			/* 479 */int page = 0;
 			int maxpage = (int) Math.floor(sortNames.size() / 40);
-			/*     */try {
+			try {
 				/* 481 */if (args.length > 1)
 					page = Integer.parseInt(args[1]) - 1;
-				/*     */} catch (NumberFormatException localNumberFormatException) {
-				/*     */}
+			} catch (NumberFormatException localNumberFormatException) {
+			}
 			/* 483 */if (page > maxpage)
 				page = maxpage;
 			/* 484 */if (page < 0)
@@ -630,45 +603,38 @@ public class MidiBanks extends JavaPlugin
 				/* 487 */result = "";
 				/* 488 */for (int j = 0; (j < 10) && (i1 < sortNames.size()); i1++) {
 					/* 489 */result = result + (String) sortNames.get(i1) + " ";
-					/*     */
+
 					/* 488 */j++;
-					/*     */}
+				}
 				/* 490 */if (result == "")
 					continue;
 				sender.sendMessage(result);
-				/*     */}
-			/*     */}
+			}
+		}
 		/* 493 */return true;
-		/*     */}
-
-	/*     */
-	/*     */boolean varCanCreate(Player p)
-	/*     */{
-		/* 498 */return this.varProvider.getFlag(p, "can-create", true);
-		/*     */}
-
-	/*     */boolean varCanUse(Player p) {
-		/* 501 */return this.varProvider.getFlag(p, "can-use", true);
-		/*     */}
-
-	/*     */
-	/*     */class UpdateSign
-	/*     */implements Runnable
-	/*     */{
-		/*     */private org.bukkit.block.Sign midiSign;
-
-		/*     */
-		/*     */UpdateSign(org.bukkit.block.Sign midiSign)
-		/*     */{
-			/* 178 */this.midiSign = midiSign;
-			/*     */}
-
-		/*     */public void run() {
-			/* 181 */this.midiSign.update();
-			/*     */}
-		/*     */
 	}
-	/*     */
+
+	boolean varCanCreate(Player p) {
+		/* 498 */return this.varProvider.getFlag(p, "can-create", true);
+	}
+
+	boolean varCanUse(Player p) {
+		/* 501 */return this.varProvider.getFlag(p, "can-use", true);
+	}
+
+	class UpdateSign implements Runnable {
+		private org.bukkit.block.Sign midiSign;
+
+		UpdateSign(org.bukkit.block.Sign midiSign) {
+			/* 178 */this.midiSign = midiSign;
+		}
+
+		public void run() {
+			/* 181 */this.midiSign.update();
+		}
+
+	}
+
 }
 
 /*
