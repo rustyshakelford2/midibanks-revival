@@ -636,8 +636,3 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 	}
 
 }
-
-/*
- * Location: C:\Users\jfmh\Downloads\midibankstest2.jar Qualified Name:
- * net.myshelter.minecraft.midibanks.MidiBanks JD-Core Version: 0.6.0
- */

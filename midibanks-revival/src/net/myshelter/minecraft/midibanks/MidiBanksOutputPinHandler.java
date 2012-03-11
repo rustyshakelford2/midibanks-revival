@@ -55,8 +55,3 @@ public class MidiBanksOutputPinHandler implements OutputPinHandler {
 	}
 }
 
-/*
- * Location: C:\Users\jfmh\Downloads\midibankstest2.jar Qualified Name:
- * net.myshelter.minecraft.midibanks.MidiBanksOutputPinHandler JD-Core Version:
- * 0.6.0
- */
