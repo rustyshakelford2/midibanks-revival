@@ -96,7 +96,7 @@ public class SongInstance {
 				&& (this.music.get(this.event).getTick() <= this.tick); this.event += 1) {
 			/* 78 */if (this.music.get(this.event).getMessage().getStatus() >> 4 != 9)
 				continue;
-			ArrayList relBlocks = new ArrayList(org.bukkit.block);
+			ArrayList relBlocks = new ArrayList();
 			/* 81 */int channel = 0;
 			/* 82 */if (this.chanCollapse) {
 				relBlocks.add(this.firstBlock);
