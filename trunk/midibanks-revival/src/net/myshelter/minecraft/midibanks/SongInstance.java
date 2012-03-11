@@ -80,33 +80,32 @@ public class SongInstance {
 	}
 
 	protected void nextTick() {
-		/* 69 */if (this.paused)
+		if (this.paused)
 			return;
-		/* 70 */this.tick += this.resolution * this.tempoCoef;
-		/* 71 */if (this.tick >= this.music.ticks()) {
+		this.tick += this.resolution * this.tempoCoef;
+		if (this.tick >= this.music.ticks()) {
 			over();
 			return;
 		}
-		/* 72 */int lcount = 0;
-		/* 73 */int keyNote = 0;
-		/* 74 */if (this.window > -1)
+		int lcount = 0;
+		int keyNote = 0;
+		if (this.window > -1)
 			keyNote = -6 + 12 * this.window;
 
-		/* 77 */for (; (this.event < this.music.size() - 1)
+		for (; (this.event < this.music.size() - 1)
 				&& (this.music.get(this.event).getTick() <= this.tick); this.event += 1) {
-			/* 78 */if (this.music.get(this.event).getMessage().getStatus() >> 4 != 9)
+			if (this.music.get(this.event).getMessage().getStatus() >> 4 != 9)
 				continue;
 			ArrayList relBlocks = new ArrayList();
-			/* 81 */int channel = 0;
-			/* 82 */if (this.chanCollapse) {
+			int channel = 0;
+			if (this.chanCollapse) {
 				relBlocks.add(this.firstBlock);
 			} else {
-				/* 84 */channel = this.music.get(this.event).getMessage()
-						.getStatus() & 0xF;
+				channel = this.music.get(this.event).getMessage().getStatus() & 0xF;
 
-				/* 86 */for (int i = 0; i < this.chans.length(); i++) {
-					/* 87 */String si = String.valueOf(this.chans.charAt(i));
-					/* 88 */if ((si.equals(Integer.toHexString(channel)))
+				for (int i = 0; i < this.chans.length(); i++) {
+					String si = String.valueOf(this.chans.charAt(i));
+					if ((si.equals(Integer.toHexString(channel)))
 							|| (si.equals("o")))
 						/* 89 */relBlocks.add(this.midiSign.getBlock()
 								.getRelative(this.sx * (i + 2), 0,
@@ -161,7 +160,8 @@ public class SongInstance {
 				}
 				/* 117 */if (iaux1.intValue() < 0)
 					continue;
-				/* 119 */for (Block relBlock : relBlocks) {
+				
+				/* 119 */for ( Block relBlock : relBlocks) {
 					/* 120 */if ((relBlock == null)
 							|| (relBlock.getType() != Material.NOTE_BLOCK))
 						continue;
@@ -220,7 +220,3 @@ public class SongInstance {
 	}
 }
 
-/*
- * Location: C:\Users\jfmh\Downloads\midibankstest2.jar Qualified Name:
- * net.myshelter.minecraft.midibanks.SongInstance JD-Core Version: 0.6.0
- */

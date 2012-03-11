@@ -14,8 +14,3 @@ public class MidiPlayerStep extends TimerTask {
 			/* 15 */((SongInstance) this.plugin.songs.get(i)).nextTick();
 	}
 }
-
-/*
- * Location: C:\Users\jfmh\Downloads\midibankstest2.jar Qualified Name:
- * net.myshelter.minecraft.midibanks.MidiPlayerStep JD-Core Version: 0.6.0
- */

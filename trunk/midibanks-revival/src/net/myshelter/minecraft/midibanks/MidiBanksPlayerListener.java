@@ -46,8 +46,3 @@ public class MidiBanksPlayerListener implements Listener {
 	}
 }
 
-/*
- * Location: C:\Users\jfmh\Downloads\midibankstest2.jar Qualified Name:
- * net.myshelter.minecraft.midibanks.MidiBanksPlayerListener JD-Core Version:
- * 0.6.0
- */
