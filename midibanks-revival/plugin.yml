@@ -1,0 +1,8 @@
+name: MidiBanks
+main: net.myshelter.minecraft.midibanks.MidiBanks
+author: Protected
+version: 2.0b_1.0.0R1test
+commands:
+  midi:
+    description: Auxiliary MIDI commands
+    usage: /<command> [arguments]
