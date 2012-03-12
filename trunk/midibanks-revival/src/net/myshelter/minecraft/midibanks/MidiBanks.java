@@ -30,7 +30,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import net.myshelter.minecraft.midibanks.*;
 public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 	protected MidiBanksBlockListener listener;
 	protected MidiBanksPlayerListener plistener;
@@ -168,22 +168,15 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 		boolean repOctave = false;
 
 		/* 196 */ArrayList checkRedstone = new ArrayList();
-		/* 197 */if (((org.bukkit.material.Sign) midiSign.getData())
-				.getFacing() == BlockFace.NORTH)
-			/* 198 */checkRedstone.add(midiSign.getBlock()
-					.getRelative(-1, 0, 0));
-		/* 199 */if (((org.bukkit.material.Sign) midiSign.getData())
-				.getFacing() == BlockFace.SOUTH)
+		/* 197 */if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.NORTH)
+			/* 198 */checkRedstone.add(midiSign.getBlock().getRelative(-1, 0, 0));
+		/* 199 */if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.SOUTH)
 			/* 200 */checkRedstone
 					.add(midiSign.getBlock().getRelative(1, 0, 0));
-		/* 201 */if (((org.bukkit.material.Sign) midiSign.getData())
-				.getFacing() == BlockFace.EAST)
-			/* 202 */checkRedstone.add(midiSign.getBlock()
-					.getRelative(0, 0, -1));
-		/* 203 */if (((org.bukkit.material.Sign) midiSign.getData())
-				.getFacing() == BlockFace.WEST)
-			/* 204 */checkRedstone
-					.add(midiSign.getBlock().getRelative(0, 0, 1));
+		/* 201 */if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.EAST)
+			/* 202 */checkRedstone.add(midiSign.getBlock().getRelative(0, 0, -1));
+		/* 203 */if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.WEST)
+			/* 204 */checkRedstone.add(midiSign.getBlock().getRelative(0, 0, 1));
 		/* 205 */checkRedstone.add(midiSign.getBlock().getRelative(0, -1, 0));
 		/* 206 */boolean hasRedstone = false;
 		boolean powered = false;
@@ -374,6 +367,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 		}
 	}
 
+	@SuppressWarnings("null")
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		/* 354 */if (!command.getName().equalsIgnoreCase("midi"))
