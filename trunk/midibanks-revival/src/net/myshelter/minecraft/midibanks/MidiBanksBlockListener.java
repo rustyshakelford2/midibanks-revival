@@ -31,7 +31,7 @@ public class MidiBanksBlockListener implements Listener {
 			disable = true;
 		else
 			return;
-		ArrayList<org.bukkit.block.Block> checkSigns = new ArrayList<org.bukkit.block.Block>();
+		ArrayList<Block> checkSigns = new ArrayList<Block>();
 		if ((event.getBlock().getRelative(1, 0, 0).getType() == Material.WALL_SIGN)
 				&& (((org.bukkit.material.Sign) event.getBlock()
 						.getRelative(1, 0, 0).getState().getData()).getFacing() == BlockFace.NORTH))
@@ -120,7 +120,7 @@ public class MidiBanksBlockListener implements Listener {
 			}
 		}
 	}
-
+		@EventHandler
 	public void onSignChange(SignChangeEvent event) {
 		/* 88 */if (!event.getLine(1).equalsIgnoreCase("[MIDI]"))
 			return;
