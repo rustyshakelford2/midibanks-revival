@@ -127,11 +127,7 @@ public class MidiBanksBlockListener implements Listener {
 		/* 89 */if (this.plugin.varCanCreate(event.getPlayer()))
 			return;
 		/* 90 */event.getBlock().setType(Material.AIR);
-		/* 91 */event
-				.getPlayer()
-				.getWorld()
-				.dropItemNaturally(event.getBlock().getLocation(),
-						new ItemStack(Material.SIGN));
+		/* 91 */event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(),new ItemStack(Material.SIGN));
 	}
 }
 

@@ -2,6 +2,7 @@ package net.myshelter.minecraft.midibanks;
 
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -12,7 +13,7 @@ public class MidiBanksPlayerListener implements Listener {
 	public MidiBanksPlayerListener(MidiBanks plugin) {
 		/* 14 */this.plugin = plugin;
 	}
-
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		/* 18 */if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			/* 19 */if (event.getClickedBlock().getType() != Material.WALL_SIGN)
