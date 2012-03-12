@@ -96,7 +96,7 @@ public class SongInstance {
 				&& (this.music.get(this.event).getTick() <= this.tick); this.event += 1) {
 			if (this.music.get(this.event).getMessage().getStatus() >> 4 != 9)
 				continue;
-			ArrayList relBlocks = new ArrayList();
+			ArrayList<org.bukkit.block.Block> relBlocks = new ArrayList<org.bukkit.block.Block>();
 			int channel = 0;
 			if (this.chanCollapse) {
 				relBlocks.add(this.firstBlock);
@@ -134,7 +134,7 @@ public class SongInstance {
 					/* 105 */this.latestNote[channel] = midiNote;
 			} else {
 				Integer iaux;
-				Integer iaux1;
+				Integer iaux1 = null;
 				/* 109 */if (this.window < 0) {
 					/* 110 */iaux1 = Integer
 							.valueOf((midiNote + (this.shift ? 6 : -6)) % 24);
