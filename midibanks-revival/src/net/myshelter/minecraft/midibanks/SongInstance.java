@@ -205,18 +205,18 @@ public class SongInstance {
 									this.sx * (i + 2), 0, this.sz * (i + 2)),
 							SongEvent.END);
 		}
-		/* 151 */this.plugin.songs.remove(this);
+			this.plugin.songs.remove(this);
 	}
 
 	public boolean toggle() {
-		/* 155 */if (this.paused) {
-			/* 156 */this.midiSign.setLine(0, "PLAYING");
-			/* 157 */this.midiSign.update();
-			/* 158 */return this.paused = false;
+		if (this.paused) {
+			this.midiSign.setLine(0, "PLAYING");
+			this.midiSign.update();
+			return this.paused = false;
 		}
-		/* 160 */this.midiSign.setLine(0, "PAUSED");
-		/* 161 */this.midiSign.update();
-		/* 162 */return this.paused = true;
+			this.midiSign.setLine(0, "PAUSED");
+			this.midiSign.update();
+			return this.paused = true;
 	}
 }
 
