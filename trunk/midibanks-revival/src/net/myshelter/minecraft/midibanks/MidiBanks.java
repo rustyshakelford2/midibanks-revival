@@ -30,7 +30,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.myshelter.minecraft.midibanks.*;
+
 public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 	protected MidiBanksBlockListener listener;
 	protected MidiBanksPlayerListener plistener;
@@ -56,36 +56,35 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 	}
 
 	public IAttributeProvider getProvider(String forService) {
-		/* 93 */if ((forService != null) && (forService != ""))
+		if ((forService != null) && (forService != ""))
 			return null;
-		/* 94 */return this.varProvider;
+		return this.varProvider;
 	}
 
 	public void onEnable() {
-		/* 98 */this.varProvider = new MidiBanksAttributeProvider(this, "");
-		/* 99 */if (!getDataFolder().exists())
+		this.varProvider = new MidiBanksAttributeProvider(this, "");
+		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
 
-		/* 101 */this.listener = new MidiBanksBlockListener(this);
-		/* 102 */this.plistener = new MidiBanksPlayerListener(this);
-		/* 103 */this.wlistener = new MidiBanksWorldListener(this);
-		/* 104 */this.songs = new ArrayList();
+		this.listener = new MidiBanksBlockListener(this);
+		this.plistener = new MidiBanksPlayerListener(this);
+		this.wlistener = new MidiBanksWorldListener(this);
+		this.songs = new ArrayList();
 
 		/* 106 */this.disallowAutostart = getConfig().getBoolean(
 				"disallow-autostart", false);
-		/* 107 */this.disallowLoop = getConfig().getBoolean("disallow-loop",
-				false);
-		/* 108 */this.redstone = getConfig().getBoolean("redstone", true);
+		this.disallowLoop = getConfig().getBoolean("disallow-loop", false);
+		this.redstone = getConfig().getBoolean("redstone", true);
 
-		/* 110 */this.pinHandler = new MidiBanksOutputPinHandler(this.redstone);
+		this.pinHandler = new MidiBanksOutputPinHandler(this.redstone);
 
-		/* 112 */resetPlayer();
-		/* 113 */getServer().getPluginManager().registerEvents(plistener, this);
-		/* 114 */getServer().getPluginManager().registerEvents(listener, this);
-		/* 115 */getServer().getPluginManager().registerEvents(listener, this);
-		/* 116 */getServer().getPluginManager().registerEvents(wlistener, this);
-		/* 117 */getServer().getPluginManager().registerEvents(wlistener, this);
-		/* 118 */dolog("Enabled! Version is " + getDescription().getVersion());
+		resetPlayer();
+		getServer().getPluginManager().registerEvents(plistener, this);
+		getServer().getPluginManager().registerEvents(listener, this);
+		getServer().getPluginManager().registerEvents(listener, this);
+		getServer().getPluginManager().registerEvents(wlistener, this);
+		getServer().getPluginManager().registerEvents(wlistener, this);
+		dolog("Enabled! Version is " + getDescription().getVersion());
 
 		/* 120 */if (this.disallowAutostart)
 			return;
@@ -98,9 +97,9 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 					/* 128 */if (cbs.getBlock().getType() == Material.WALL_SIGN) {
 						/* 129 */org.bukkit.block.Sign midiSign = (org.bukkit.block.Sign) cbs;
 						/* 130 */if ((!midiSign.getLine(1).equalsIgnoreCase(
-								"[MIDI]"))
-								||
-								/* 131 */(!midiSign.getLine(3).contains("A")))
+						"[MIDI]"))
+						||
+						/* 131 */(!midiSign.getLine(3).contains("A")))
 							continue;
 						/* 132 */learnMusic(midiSign);
 						/* 133 */count++;
@@ -168,12 +167,16 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 		boolean repOctave = false;
 
 		/* 196 */ArrayList checkRedstone = new ArrayList();
-		/* 197 */if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.NORTH)
-			/* 198 */checkRedstone.add(midiSign.getBlock().getRelative(-1, 0, 0));
-		/* 199 */if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.SOUTH)
+		/* 197 */if (((org.bukkit.material.Sign) midiSign.getData())
+				.getFacing() == BlockFace.NORTH)
+			/* 198 */checkRedstone.add(midiSign.getBlock()
+					.getRelative(-1, 0, 0));
+		/* 199 */if (((org.bukkit.material.Sign) midiSign.getData())
+				.getFacing() == BlockFace.SOUTH)
 			/* 200 */checkRedstone
-					.add(midiSign.getBlock().getRelative(1, 0, 0));
-		/* 201 */if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.EAST)
+			.add(midiSign.getBlock().getRelative(1, 0, 0));
+		/* 201 */if (((org.bukkit.material.Sign) midiSign.getData())
+				.getFacing() == BlockFace.EAST)
 			/* 202 */checkRedstone.add(midiSign.getBlock().getRelative(0, 0, -1));
 		/* 203 */if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.WEST)
 			/* 204 */checkRedstone.add(midiSign.getBlock().getRelative(0, 0, 1));
@@ -218,7 +221,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 					/* 236 */if ((sb.getType() == Material.WALL_SIGN)
 							|| (sb.getType() == Material.SIGN_POST)) {
 						/* 237 */org.bukkit.block.Sign setSign = (org.bukkit.block.Sign) sb
-								.getState();
+						.getState();
 						/* 238 */settings = "";
 						/* 239 */for (int i = 0; i < 4; i++)
 							settings = settings + setSign.getLine(i);
@@ -231,7 +234,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 					track = Integer.parseInt(mTrack.group(1), 16);
 
 				/* 247 */Pattern pChans = Pattern
-						.compile("=([0123456789abcdeflmnosz ]+)");
+				.compile("=([0123456789abcdeflmnosz ]+)");
 				/* 248 */Matcher mChans = pChans.matcher(settings);
 				/* 249 */if (mChans.find())
 					chans = mChans.group(1);
@@ -245,7 +248,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 						tempoCoef = Integer.parseInt(mTempo.group(2));
 				}
 				/* 257 */Pattern pFineTempo = Pattern
-						.compile("(\\{|\\})([1-9])");
+				.compile("(\\{|\\})([1-9])");
 				/* 258 */Matcher mFineTempo = pFineTempo.matcher(settings);
 				/* 259 */if (mFineTempo.find()) {
 					/* 260 */if (mFineTempo.group(1).equals("{"))
@@ -288,7 +291,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 						/* 286 */if ((first.get(i).getMessage().getStatus() == 255)
 								&& (first.get(i).getMessage().getMessage()[1] == 81)) {
 							/* 287 */byte[] bf = first.get(i).getMessage()
-									.getMessage();
+							.getMessage();
 							/* 288 */for (int j = 3; j < 6; j++) {
 								/* 289 */realTempo <<= 8;
 								/* 290 */realTempo += bf[j];
@@ -323,7 +326,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 							midi.getTracks()[track], chans);
 					/* 316 */si.track = track;
 					/* 317 */si.resolution = Math
-							.floor(midi.getResolution() / 24);
+					.floor(midi.getResolution() / 24);
 					/* 318 */si.chanCollapse = chanCollapse;
 					/* 319 */si.shift = shift;
 					/* 320 */si.loop = loop;
@@ -341,9 +344,9 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 			} catch (IOException ioe) {
 				/* 333 */midiSign.setLine(0, "CAN'T READ FILE");
 			}
-		else {
-			/* 335 */midiSign.setLine(0, "BAD FILENAME");
-		}
+			else {
+				/* 335 */midiSign.setLine(0, "BAD FILENAME");
+			}
 		/* 337 */getServer().getScheduler().scheduleSyncDelayedTask(this,
 				new UpdateSign(midiSign));
 	}
@@ -379,7 +382,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 				|| (((Player) sender).isOp()))
 			admin = true;
 		/* 358 */boolean cannormalcmd = (admin)
-				|| (varCanCreate((Player) sender));
+		|| (varCanCreate((Player) sender));
 		/* 359 */if ((args[0].equalsIgnoreCase("halt")) && (admin)) {
 			/* 360 */this.player.cancel();
 			/* 361 */resetPlayer();
@@ -426,8 +429,8 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 								/* 388 */if (chans[i] > 0) {
 									/* 389 */chanc++;
 									/* 390 */label = label
-											+ Integer.toHexString(i) + ":"
-											+ chans[i] + " ";
+									+ Integer.toHexString(i) + ":"
+									+ chans[i] + " ";
 								}
 							}
 							/* 393 */sender.sendMessage("Note ONs: " + count
@@ -436,12 +439,12 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 
 						}
 						/* 396 */sender
-								.sendMessage("No such track in this sequence.");
+						.sendMessage("No such track in this sequence.");
 
 					}
 
 					/* 400 */sender.sendMessage("== MIDI Sequence " + args[1]
-							+ ".mid ==");
+					                                                       + ".mid ==");
 					/* 401 */Double secs = Double.valueOf(midi
 							.getMicrosecondLength() / 1000000.0D);
 					/* 402 */sender.sendMessage("Length: "
@@ -474,7 +477,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 								+ String.format("%.2f", new Object[] { Double
 										.valueOf(1000.0D / (midi
 												.getResolution() * 24)) })
-								+ "ms)");
+												+ "ms)");
 					/* 413 */if (midi.getDivisionType() == 25.0F)
 						/* 414 */sender.sendMessage("Tempo: "
 								+ midi.getResolution()
@@ -483,7 +486,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 								+ String.format("%.2f", new Object[] { Double
 										.valueOf(1000.0D / (midi
 												.getResolution() * 25)) })
-								+ "ms)");
+												+ "ms)");
 					/* 415 */if (midi.getDivisionType() == 30.0F)
 						/* 416 */sender.sendMessage("Tempo: "
 								+ midi.getResolution()
@@ -492,7 +495,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 								+ String.format("%.2f", new Object[] { Double
 										.valueOf(1000.0D / (midi
 												.getResolution() * 30)) })
-								+ "ms)");
+												+ "ms)");
 					/* 417 */if (midi.getDivisionType() != 29.969999F)
 
 						sender.sendMessage("Tempo: "
@@ -503,16 +506,16 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 										"%.2f",
 										new Object[] { Double.valueOf(1000.0D / (midi
 												.getResolution() * 29.969999999999999D)) })
-								+ "ms)");
+												+ "ms)");
 				} catch (InvalidMidiDataException imde) {
 					/* 421 */sender
-							.sendMessage("Error reading MIDI data. Is this a MIDI file?");
+					.sendMessage("Error reading MIDI data. Is this a MIDI file?");
 				} catch (IOException ioe) {
 					/* 423 */sender.sendMessage("No such file!");
 				}
-			else
-				/* 425 */sender
-						.sendMessage("Invalid filename. Filenames can only have letters, numbers, underscores and dashes.");
+				else
+					/* 425 */sender
+					.sendMessage("Invalid filename. Filenames can only have letters, numbers, underscores and dashes.");
 		}
 
 		int i;
@@ -527,7 +530,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 						return true;
 					/* 434 */Sequence midi = MidiSystem.getSequence(midiFile);
 					/* 435 */sender.sendMessage("== MIDI Sequence " + args[1]
-							+ ".mid - Channels ==");
+					                                                       + ".mid - Channels ==");
 					/* 436 */boolean[] chans1 = new boolean[16];
 					/* 437 */for (int i1 = 0; i1 < chans1.length; i1++)
 						chans1[i1] = false;
@@ -545,14 +548,14 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 					/* 449 */sender.sendMessage("Used: " + label);
 				} catch (InvalidMidiDataException imde) {
 					/* 451 */sender
-							.sendMessage("Error reading MIDI data. Is this a MIDI file?");
+					.sendMessage("Error reading MIDI data. Is this a MIDI file?");
 				} catch (IOException ioe) {
 					/* 453 */sender.sendMessage("No such file!");
 				}
-			else {
-				/* 455 */sender
-						.sendMessage("Invalid filename. Filenames can only have letters, numbers, underscores and dashes.");
-			}
+				else {
+					/* 455 */sender
+					.sendMessage("Invalid filename. Filenames can only have letters, numbers, underscores and dashes.");
+				}
 		}
 		/* 458 */if ((args[0].equalsIgnoreCase("list")) && (cannormalcmd)) {
 			/* 459 */String result = "";
@@ -590,10 +593,10 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 			/* 484 */if (page < 0)
 				page = 0;
 			/* 485 */sender
-					.sendMessage("== List of available MIDI files == (page "
-							+ (page + 1) + " of " + (maxpage + 1) + ")");
+			.sendMessage("== List of available MIDI files == (page "
+					+ (page + 1) + " of " + (maxpage + 1) + ")");
 			/* 486 */for (int i1 = page * 40; (i1 < (page + 1) * 40)
-					&& (i1 < sortNames.size());) {
+			&& (i1 < sortNames.size());) {
 				/* 487 */result = "";
 				/* 488 */for (int j = 0; (j < 10) && (i1 < sortNames.size()); i1++) {
 					/* 489 */result = result + (String) sortNames.get(i1) + " ";

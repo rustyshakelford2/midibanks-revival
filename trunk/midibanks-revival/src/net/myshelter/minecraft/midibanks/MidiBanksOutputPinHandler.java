@@ -30,6 +30,7 @@ public class MidiBanksOutputPinHandler implements OutputPinHandler {
 		/* 24 */return true;
 	}
 
+	@Override
 	public void outputPin(Block main, SongEvent event) {
 		/* 28 */if (!this.redstone)
 			return;

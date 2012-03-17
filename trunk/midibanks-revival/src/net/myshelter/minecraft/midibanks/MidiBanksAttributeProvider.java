@@ -15,21 +15,25 @@ public class MidiBanksAttributeProvider implements IAttributeProvider {
 		/* 15 */this.namespace = namespace;
 	}
 
+	@Override
 	public boolean getFlag(Player p, String name, boolean def) {
 		/* 19 */return this.plugin.getConfig().getBoolean(
 				this.namespace + name, def);
 	}
 
+	@Override
 	public int getInt(Player p, String name, int def) {
 		/* 23 */return this.plugin.getConfig().getInt(this.namespace + name,
 				def);
 	}
 
+	@Override
 	public double getDouble(Player p, String name, double def) {
 		/* 27 */return this.plugin.getConfig().getDouble(this.namespace + name,
 				def);
 	}
 
+	@Override
 	public String getString(Player p, String name, String def) {
 		String s;
 		/* 32 */if ((s = this.plugin.getConfig().getString(
@@ -39,6 +43,7 @@ public class MidiBanksAttributeProvider implements IAttributeProvider {
 		/* 35 */return def;
 	}
 
+	@Override
 	public IAttributeProvider getNamespace(String name) {
 		/* 39 */return new MidiBanksAttributeProvider(this.plugin,
 				this.namespace + name);

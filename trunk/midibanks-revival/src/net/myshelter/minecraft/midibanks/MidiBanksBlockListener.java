@@ -63,7 +63,7 @@ public class MidiBanksBlockListener implements Listener {
 					/* 47 */if (!disable) {
 						/* 48 */boolean playing = false;
 						/* 49 */for (int i = 0; i < this.plugin.songs.size(); i++) {
-							/* 50 */if (((SongInstance) this.plugin.songs
+							/* 50 */if ((this.plugin.songs
 									.get(i)).midiSign.getBlock().getLocation()
 									.equals(midiSign.getBlock().getLocation())) {
 								/* 51 */playing = true;
@@ -111,10 +111,10 @@ public class MidiBanksBlockListener implements Listener {
 			/* 77 */if (midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) {
 				/* 78 */SongInstance rc = null;
 				/* 79 */for (int i = 0; i < this.plugin.songs.size(); i++)
-					/* 80 */if (((SongInstance) this.plugin.songs.get(i)).midiSign
+					/* 80 */if ((this.plugin.songs.get(i)).midiSign
 							.getBlock().getLocation()
 							.equals(midiSign.getBlock().getLocation())) {
-						/* 81 */rc = (SongInstance) this.plugin.songs.get(i);
+						/* 81 */rc = this.plugin.songs.get(i);
 						/* 82 */rc.toggle();
 					}
 			}
