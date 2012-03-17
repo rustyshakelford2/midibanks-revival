@@ -25,10 +25,10 @@ public class MidiBanksPlayerListener implements Listener {
 				return;
 			/* 23 */SongInstance rc = null;
 			/* 24 */for (int i = 0; i < this.plugin.songs.size(); i++)
-				/* 25 */if (((SongInstance) this.plugin.songs.get(i)).midiSign
+				/* 25 */if ((this.plugin.songs.get(i)).midiSign
 						.getBlock().getLocation()
 						.equals(midiSign.getBlock().getLocation())) {
-					/* 26 */rc = (SongInstance) this.plugin.songs.get(i);
+					/* 26 */rc = this.plugin.songs.get(i);
 					/* 27 */rc.toggle();
 				}
 			/* 29 */if (rc == null)
