@@ -9,8 +9,9 @@ public class MidiPlayerStep extends TimerTask {
 		/* 10 */this.plugin = plugin;
 	}
 
+	@Override
 	public void run() {
 		/* 14 */for (int i = 0; i < this.plugin.songs.size(); i++)
-			/* 15 */((SongInstance) this.plugin.songs.get(i)).nextTick();
+			/* 15 */(this.plugin.songs.get(i)).nextTick();
 	}
 }
