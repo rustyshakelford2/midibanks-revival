@@ -124,8 +124,6 @@ public class MidiBanksBlockListener implements Listener {
 	public void onSignChange(SignChangeEvent event) {
 		/* 88 */if (!event.getLine(1).equalsIgnoreCase("[MIDI]"))
 			return;
-		/* 89 */if (this.plugin.varCanCreate(event.getPlayer()))
-			return;
 		/* 90 */event.getBlock().setType(Material.AIR);
 		/* 91 */event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(),new ItemStack(Material.SIGN));
 	}
