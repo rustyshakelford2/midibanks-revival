@@ -17,9 +17,6 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Track;
 
-import net.myshelter.minecraft.IAttributePlugin;
-import net.myshelter.minecraft.IAttributeProvider;
-
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -29,9 +26,10 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class MidiBanks extends JavaPlugin implements IAttributePlugin {
+public class MidiBanks extends JavaPlugin {
 	protected MidiBanksBlockListener listener;
 	protected MidiBanksPlayerListener plistener;
 	protected MidiBanksWorldListener wlistener;
@@ -43,26 +41,11 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 	/* 80 */boolean disallowLoop = false;
 	/* 81 */boolean redstone = true;
 	public OutputPinHandler pinHandler;
-	IAttributeProvider varProvider;
 
 	protected static void dolog(String msg) {
 		log.info("[MidiBanks] " + msg);
 	}
-
-	public void setProvider(String forService, IAttributeProvider provider) {
-		/* 88 */if ((forService != null) && (forService != ""))
-			return;
-		/* 89 */this.varProvider = provider.getNamespace("midibanks");
-	}
-
-	public IAttributeProvider getProvider(String forService) {
-		if ((forService != null) && (forService != ""))
-			return null;
-		return this.varProvider;
-	}
-
 	public void onEnable() {
-		this.varProvider = new MidiBanksAttributeProvider(this, "");
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
 
@@ -369,11 +352,9 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 		} catch (NullPointerException localNullPointerException) {
 		}
 	}
-
-	@SuppressWarnings("null")
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		/* 354 */if (!command.getName().equalsIgnoreCase("midi"))
+		/* 354 */if (!command.getName().equalsIgnoreCase("midibanks"))
 			return false;
 		/* 355 */if (args.length < 1)
 			return true;
@@ -381,8 +362,7 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 		/* 357 */if ((!(sender instanceof Player))
 				|| (((Player) sender).isOp()))
 			admin = true;
-		/* 358 */boolean cannormalcmd = (admin)
-		|| (varCanCreate((Player) sender));
+		/* 358 */boolean cannormalcmd = (admin);
 		/* 359 */if ((args[0].equalsIgnoreCase("halt")) && (admin)) {
 			/* 360 */this.player.cancel();
 			/* 361 */resetPlayer();
@@ -609,14 +589,6 @@ public class MidiBanks extends JavaPlugin implements IAttributePlugin {
 			}
 		}
 		/* 493 */return true;
-	}
-
-	boolean varCanCreate(Player p) {
-		/* 498 */return this.varProvider.getFlag(p, "can-create", true);
-	}
-
-	boolean varCanUse(Player p) {
-		/* 501 */return this.varProvider.getFlag(p, "can-use", true);
 	}
 
 	class UpdateSign implements Runnable {

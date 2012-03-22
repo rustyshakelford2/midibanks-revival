@@ -21,8 +21,6 @@ public class MidiBanksPlayerListener implements Listener {
 			/* 20 */Sign midiSign = (Sign) event.getClickedBlock().getState();
 			/* 21 */if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]"))
 				return;
-			/* 22 */if (!this.plugin.varCanUse(event.getPlayer()))
-				return;
 			/* 23 */SongInstance rc = null;
 			/* 24 */for (int i = 0; i < this.plugin.songs.size(); i++)
 				/* 25 */if ((this.plugin.songs.get(i)).midiSign
@@ -39,8 +37,6 @@ public class MidiBanksPlayerListener implements Listener {
 				return;
 			/* 34 */Sign midiSign = (Sign) event.getClickedBlock().getState();
 			/* 35 */if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]"))
-				return;
-			/* 36 */if (!this.plugin.varCanUse(event.getPlayer()))
 				return;
 			/* 37 */this.plugin.stopMusic(midiSign);
 		}
