@@ -16,6 +16,7 @@
 /*     */ import javax.sound.midi.MidiMessage;
 /*     */ import javax.sound.midi.MidiSystem;
 /*     */ import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
 /*     */ import javax.sound.midi.Track;
 /*     */ import org.bukkit.Chunk;
 /*     */ import org.bukkit.Location;
@@ -309,7 +310,7 @@ getServer().getPluginManager().registerEvents(wlistener, this);
 /*     */     }
 /*     */     int[] chans = null;
 /*     */     int b;
-/*     */     Track t = null;
+
 /* 363 */     if ((args[0].equalsIgnoreCase("check")) && (args.length >= 2) && (cannormalcmd)) {
 /* 364 */       Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
 /* 365 */       Matcher mFileName = pFileName.matcher(args[1]);
@@ -323,15 +324,15 @@ getServer().getPluginManager().registerEvents(wlistener, this);
 /* 372 */             int track = Integer.parseInt(args[2], 16);
 /* 373 */             if ((track >= 0) && (track < midi.getTracks().length)) {
 /* 374 */               sender.sendMessage("== MIDI Sequence " + args[1] + ".mid - Track " + Integer.toHexString(track) + " ==");
-/* 375 */               Track track1 = midi.getTracks()[track];
-/* 376 */               sender.sendMessage("Length: " + track1.ticks() + " ticks, " + track1.size() + " events");
+/* 375 */               Track track11 = midi.getTracks()[track];
+/* 376 */               sender.sendMessage("Length: " + track11.ticks() + " ticks, " + track11.size() + " events");
 /* 377 */               int count = 0; int chanc = 0;
 /* 378 */               chans = new int[16];
 /* 379 */               for (int i1 = 0; i1 < chans.length; i1++) chans[i1] = 0;
-/* 380 */               for (int i1 = 0; i1 < track1.size(); i1++) {
-/* 381 */                 if (track1.get(i1).getMessage().getStatus() >> 4 == 9) {
+/* 380 */               for (int i1 = 0; i1 < track11.size(); i1++) {
+/* 381 */                 if (track11.get(i1).getMessage().getStatus() >> 4 == 9) {
 /* 382 */                   count++;
-/* 383 */                   chans[(track1.get(i1).getMessage().getStatus() & 0xF)] += 1;
+/* 383 */                   chans[(track11.get(i1).getMessage().getStatus() & 0xF)] += 1;
 /*     */                 }
 /*     */               }
 /* 386 */               String bychan = "";
@@ -351,10 +352,11 @@ getServer().getPluginManager().registerEvents(wlistener, this);
 /* 401 */           Double secs = Double.valueOf(midi.getMicrosecondLength() / 1000000.0D);
 /* 402 */           sender.sendMessage("Length: " + String.format("%.2f", new Object[] { secs }) + "s, " + midi.getTickLength() + " ticks");
 /* 403 */           int a = 0; b = 0;
+/*     */     		Track track1 = null;
 /* 404 */           String bychan = Integer.toString((i = (int) midi.getTracks().length)); for ( i = 0; chans[i] < bychan.length(); i++) 
 					{ 
-					/* 405 */             if (t.size() > 20) a++;
-/* 406 */             if (t.ticks() >= 0.8D * midi.getTickLength()) continue; b++;
+					/* 405 */             //if (track1.size() > 20) a++;
+/* 406 */             //if (track1.ticks() >= 0.8D * midi.getTickLength()) continue; b++;
 /*     */           }
 /* 408 */           sender.sendMessage("Tracks: " + midi.getTracks().length + " total, " + a + " significant, " + b + " long");
 /* 409 */           if (midi.getDivisionType() == 0.0F)
@@ -386,10 +388,10 @@ getServer().getPluginManager().registerEvents(wlistener, this);
 /* 435 */           sender.sendMessage("== MIDI Sequence " + args[1] + ".mid - Channels ==");
 /* 436 */           boolean[] chans1 = new boolean[16];
 /* 437 */           for (int interger1 = 0; interger1 < chans1.length; interger1++) chans1[interger1] = false;
-/* 438 */           for (Track track1 : midi.getTracks()) {
-/* 439 */             for (int i1 = 0; i1 < t.size(); i1++) {
-/* 440 */               if (t.get(i1).getMessage().getStatus() >> 4 == 9)
-/* 441 */                 chans1[(t.get(i1).getMessage().getStatus() & 0xF)] = true;
+/* 438 */           for (Track track12 : midi.getTracks()) {
+/* 439 */             for (int i1 = 0; i1 < track12.size(); i1++) {
+/* 440 */               if (track12.get(i1).getMessage().getStatus() >> 4 == 9)
+/* 441 */                 chans1[(track12.get(i1).getMessage().getStatus() & 0xF)] = true;
 /*     */             }
 /*     */           }
 /* 444 */           bychan = "";
