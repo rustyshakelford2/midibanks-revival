@@ -1,39 +1,32 @@
 /*     */ package net.myshelter.minecraft.midibanks;
 /*     */ 
 /*     */ import java.io.File;
-/*     */ import java.io.IOException;
-/*     */ import java.util.ArrayList;
-/*     */ import java.util.Collections;
-/*     */ import java.util.EmptyStackException;
-/*     */ import java.util.HashSet;
-/*     */ import java.util.Stack;
-/*     */ import java.util.Timer;
-/*     */ import java.util.logging.Logger;
-/*     */ import java.util.regex.Matcher;
-/*     */ import java.util.regex.Pattern;
-/*     */ import javax.sound.midi.InvalidMidiDataException;
-/*     */ import javax.sound.midi.MidiEvent;
-/*     */ import javax.sound.midi.MidiMessage;
-/*     */ import javax.sound.midi.MidiSystem;
-/*     */ import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
-/*     */ import javax.sound.midi.Track;
-/*     */ import org.bukkit.Chunk;
-/*     */ import org.bukkit.Location;
-/*     */ import org.bukkit.Material;
-/*     */ import org.bukkit.Server;
-/*     */ import org.bukkit.World;
-/*     */ import org.bukkit.block.Block;
-/*     */ import org.bukkit.block.BlockFace;
-/*     */ import org.bukkit.block.BlockState;
-/*     */ import org.bukkit.command.Command;
-/*     */ import org.bukkit.command.CommandSender;
-/*     */ import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-/*     */ import org.bukkit.plugin.PluginDescriptionFile;
-/*     */ import org.bukkit.plugin.PluginManager;
-/*     */ import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EmptyStackException;
+import java.util.HashSet;
+import java.util.Stack;
+import java.util.Timer;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Track;
+
+import org.bukkit.Chunk;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 /*     */ 
 /*     */ public class MidiBanks extends JavaPlugin
 /*     */ {

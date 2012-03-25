@@ -12,6 +12,9 @@ import org.bukkit.event.Listener;
 /*    */ import org.bukkit.event.block.BlockRedstoneEvent;
 /*    */ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
+
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 /*    */ 
 /*    */ public class MidiBanksBlockListener implements Listener
 /*    */ {
@@ -91,6 +94,14 @@ import org.bukkit.inventory.ItemStack;
 /*    */   public void onSignChange(SignChangeEvent event) {
 /* 88 */     if (!event.getLine(1).equalsIgnoreCase("[MIDI]")) return;
 /* 89 */     //if (this.plugin.varCanCreate(event.getPlayer())) return;
+			try{
+				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
+			if(!user.has("midibanks.can-create")) return;
+			}
+				catch (NoClassDefFoundError e)
+			{
+					if(!event.getPlayer().isOp()) return;
+			}
 /* 90 */     event.getBlock().setType(Material.AIR);
 /* 91 */     event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.SIGN));
 /*    */   }
