@@ -1,6 +1,4 @@
 /*    */ package net.myshelter.minecraft.midibanks;
-/*    */ 
-/*    */ import java.util.ArrayList;
 /*    */ import java.util.TimerTask;
 /*    */ 
 /*    */ public class MidiPlayerStep extends TimerTask
@@ -9,12 +7,13 @@
 /*    */ 
 /*    */   protected MidiPlayerStep(MidiBanks plugin)
 /*    */   {
-/* 10 */     this.plugin = plugin;
+     this.plugin = plugin;
 /*    */   }
 /*    */ 
-/*    */   public void run() {
-/* 14 */     for (int i = 0; i < this.plugin.songs.size(); i++)
-/* 15 */       ((SongInstance)this.plugin.songs.get(i)).nextTick();
+/*    */   @Override
+public void run() {
+     for (int i = 0; i < this.plugin.songs.size(); i++)
+       (this.plugin.songs.get(i)).nextTick();
 /*    */   }
 /*    */ }
 
