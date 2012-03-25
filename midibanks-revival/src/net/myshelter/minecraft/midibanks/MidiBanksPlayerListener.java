@@ -1,11 +1,7 @@
 /*    */ package net.myshelter.minecraft.midibanks;
-/*    */ 
-/*    */ import java.util.ArrayList;
 import java.util.logging.Logger;
 
-/*    */ import org.bukkit.Location;
 /*    */ import org.bukkit.Material;
-/*    */ import org.bukkit.block.Block;
 /*    */ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,55 +14,53 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 /*    */ public class MidiBanksPlayerListener implements Listener
 /*    */ {
 /*    */   MidiBanks plugin;
-/*  72 */   protected static final Logger log = Logger.getLogger("Minecraft");
-/*     */   protected static void dolog(String msg)
-/*     */   {
-/*  74 */     log.info("[MidiBanks] " + msg);
-/*     */   }
+   protected static final Logger log = Logger.getLogger("Minecraft");
+   protected static void dolog(String msg)
+   {
+     log.info("[MidiBanks] " + msg);
+   }
 
 /*    */   public MidiBanksPlayerListener(MidiBanks plugin)
 /*    */   {
-/* 14 */     this.plugin = plugin;
+     this.plugin = plugin;
 /*    */   }
 /*    */ 	@EventHandler
 /*    */   public void onPlayerInteract(PlayerInteractEvent event) {
-/* 18 */     if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-/* 19 */       if (event.getClickedBlock().getType() != Material.WALL_SIGN) return;
-/* 20 */       Sign midiSign = (Sign)event.getClickedBlock().getState();
-/* 21 */       if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) return;
-/* 22 */       //if (!this.plugin.varCanUse(event.getPlayer())) return;
+     if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+       if (event.getClickedBlock().getType() != Material.WALL_SIGN) return;
+       Sign midiSign = (Sign)event.getClickedBlock().getState();
+       if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) return;
+       //if (!this.plugin.varCanUse(event.getPlayer())) return;
 				try{
 				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
-				if(!user.has("midibanks.can-use")) return;
+				if(!user.has("midibanks.can-use")|!event.getPlayer().isOp()) return;
 				}
 				catch (NoClassDefFoundError e)
 				{
-					if(!event.getPlayer().isOp()) return;
 				}
-/* 23 */       SongInstance rc = null;
-/* 24 */       for (int i = 0; i < this.plugin.songs.size(); i++)
-/* 25 */         if (((SongInstance)this.plugin.songs.get(i)).midiSign.getBlock().getLocation().equals(midiSign.getBlock().getLocation())) {
-/* 26 */           rc = (SongInstance)this.plugin.songs.get(i);
-/* 27 */           rc.toggle();
+       SongInstance rc = null;
+       for (int i = 0; i < this.plugin.songs.size(); i++)
+         if ((this.plugin.songs.get(i)).midiSign.getBlock().getLocation().equals(midiSign.getBlock().getLocation())) {
+           rc = this.plugin.songs.get(i);
+           rc.toggle();
 /*    */         }
-/* 29 */       if (rc == null)
-/* 30 */         this.plugin.learnMusic(midiSign);
+       if (rc == null)
+         this.plugin.learnMusic(midiSign);
 /*    */     }
-/* 32 */     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-/* 33 */       if (event.getClickedBlock().getType() != Material.WALL_SIGN) return;
-/* 34 */       Sign midiSign = (Sign)event.getClickedBlock().getState();
-/* 35 */       if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) return;
+     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+       if (event.getClickedBlock().getType() != Material.WALL_SIGN) return;
+       Sign midiSign = (Sign)event.getClickedBlock().getState();
+       if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) return;
 				try
 				{
 				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
-				if(!user.has("midibanks.can-use")) return;
+				if(!user.has("midibanks.can-use")|!event.getPlayer().isOp()) return;
 				}
 				catch (NoClassDefFoundError e)
 				{
-					dolog("reverting to op permissions");
-					if(!event.getPlayer().isOp()) return;
+					//dolog("reverting to op permissions");
 				}
-/* 37 */       this.plugin.stopMusic(midiSign);
+       this.plugin.stopMusic(midiSign);
 /*    */     }
 /*    */   }
 /*    */ }
