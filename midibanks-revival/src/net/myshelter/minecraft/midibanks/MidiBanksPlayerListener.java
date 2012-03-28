@@ -1,31 +1,31 @@
-/*    */ package net.myshelter.minecraft.midibanks;
+ package net.myshelter.minecraft.midibanks;
 import java.util.logging.Logger;
 
-/*    */ import org.bukkit.Material;
-/*    */ import org.bukkit.block.Sign;
+ import org.bukkit.Material;
+ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-/*    */ import org.bukkit.event.block.Action;
+ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-/*    */ 
-/*    */ public class MidiBanksPlayerListener implements Listener
-/*    */ {
-/*    */   MidiBanks plugin;
+ 
+ public class MidiBanksPlayerListener implements Listener
+ {
+   MidiBanks plugin;
    protected static final Logger log = Logger.getLogger("Minecraft");
    protected static void dolog(String msg)
    {
      log.info("[MidiBanks] " + msg);
    }
 
-/*    */   public MidiBanksPlayerListener(MidiBanks plugin)
-/*    */   {
+   public MidiBanksPlayerListener(MidiBanks plugin)
+   {
      this.plugin = plugin;
-/*    */   }
-/*    */ 	@EventHandler
-/*    */   public void onPlayerInteract(PlayerInteractEvent event) {
+   }
+ 	@EventHandler
+   public void onPlayerInteract(PlayerInteractEvent event) {
      if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
        if (event.getClickedBlock().getType() != Material.WALL_SIGN) return;
        Sign midiSign = (Sign)event.getClickedBlock().getState();
@@ -43,10 +43,10 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
          if ((this.plugin.songs.get(i)).midiSign.getBlock().getLocation().equals(midiSign.getBlock().getLocation())) {
            rc = this.plugin.songs.get(i);
            rc.toggle();
-/*    */         }
+         }
        if (rc == null)
          this.plugin.learnMusic(midiSign);
-/*    */     }
+     }
      if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
        if (event.getClickedBlock().getType() != Material.WALL_SIGN) return;
        Sign midiSign = (Sign)event.getClickedBlock().getState();
@@ -61,11 +61,6 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 					//dolog("reverting to op permissions");
 				}
        this.plugin.stopMusic(midiSign);
-/*    */     }
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\jfmh\Downloads\midibankstest2.jar
- * Qualified Name:     net.myshelter.minecraft.midibanks.MidiBanksPlayerListener
- * JD-Core Version:    0.6.0
- */
+     }
+   }
+ }

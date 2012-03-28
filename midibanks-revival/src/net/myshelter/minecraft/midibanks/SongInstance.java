@@ -174,8 +174,3 @@
      return this.paused = true;
    }
  }
-
-/* Location:           C:\Users\jfmh\Downloads\midibankstest2.jar
- * Qualified Name:     net.myshelter.minecraft.midibanks.SongInstance
- * JD-Core Version:    0.6.0
- */
