@@ -53,7 +53,6 @@ import org.bukkit.plugin.java.JavaPlugin;
      this.plistener = new MidiBanksPlayerListener(this);
      this.wlistener = new MidiBanksWorldListener(this);
      this.songs = new ArrayList();
- 
      this.disallowAutostart = getConfig().getBoolean("disallow-autostart", false);
      this.disallowLoop = getConfig().getBoolean("disallow-loop", false);
      this.redstone = getConfig().getBoolean("redstone", true);
@@ -303,7 +302,7 @@ import org.bukkit.plugin.java.JavaPlugin;
      }
      int[] chans = null;
      int b;
-
+     //Check <filename>
      if ((args[0].equalsIgnoreCase("check")) && (args.length >= 2) && (cannormalcmd)) {
        Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
        Matcher mFileName = pFileName.matcher(args[1]);
@@ -348,7 +347,7 @@ import org.bukkit.plugin.java.JavaPlugin;
      		Track track1 = null;
            String bychan = Integer.toString((i = (int) midi.getTracks().length)); for ( i = 0; chans[i] < bychan.length(); i++) 
 					{ 
-					/* 405 */             //if (track1.size() > 20) a++;
+             //if (track1.size() > 20) a++;
              //if (track1.ticks() >= 0.8D * midi.getTickLength()) continue; b++;
            }
            sender.sendMessage("Tracks: " + midi.getTracks().length + " total, " + a + " significant, " + b + " long");
@@ -371,6 +370,7 @@ import org.bukkit.plugin.java.JavaPlugin;
      }
      String bychan;
      int i;
+     //channels <filename>
      if ((args[0].equalsIgnoreCase("channels")) && (args.length >= 2) && (cannormalcmd)) {
        Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
        Matcher mFileName = pFileName.matcher(args[1]);
@@ -401,6 +401,7 @@ import org.bukkit.plugin.java.JavaPlugin;
          sender.sendMessage("Invalid filename. Filenames can only have letters, numbers, underscores and dashes.");
        }
      }
+     //list command
      if ((args[0].equalsIgnoreCase("list")) && (cannormalcmd)) {
        String result = "";
 				File[] Files;
@@ -443,7 +444,7 @@ import org.bukkit.plugin.java.JavaPlugin;
      }
      return true;
    }
- 
+ //old attribute plugin shit!!
    //boolean varCanCreate(Player p)
    //{
      //return this.varProvider.getFlag(p, "can-create", true);

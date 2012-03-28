@@ -1,27 +1,27 @@
-/*    */ package net.myshelter.minecraft.midibanks;
-/*    */ 
-/*    */ import java.util.ArrayList;
-/*    */ import org.bukkit.Material;
-/*    */ import org.bukkit.block.Block;
-/*    */ import org.bukkit.block.BlockFace;
+ package net.myshelter.minecraft.midibanks;
+ 
+ import java.util.ArrayList;
+ import org.bukkit.Material;
+ import org.bukkit.block.Block;
+ import org.bukkit.block.BlockFace;
 import org.bukkit.event.Listener;
-/*    */ import org.bukkit.event.block.BlockRedstoneEvent;
-/*    */ import org.bukkit.event.block.SignChangeEvent;
+ import org.bukkit.event.block.BlockRedstoneEvent;
+ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-/*    */ 
-/*    */ public class MidiBanksBlockListener implements Listener
-/*    */ {
-/*    */   MidiBanks plugin;
-/*    */ 
-/*    */   public MidiBanksBlockListener(MidiBanks plugin)
-/*    */   {
+ 
+ public class MidiBanksBlockListener implements Listener
+ {
+   MidiBanks plugin;
+ 
+   public MidiBanksBlockListener(MidiBanks plugin)
+   {
      this.plugin = plugin;
-/*    */   }
-/*    */ 
-/*    */   public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+   }
+ 
+   public void onBlockRedstoneChange(BlockRedstoneEvent event) {
      if (event.getBlock().getType() != Material.REDSTONE_WIRE) return;
      if (!this.plugin.redstone) return;
      boolean disable = false;
@@ -52,14 +52,14 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
                if ((this.plugin.songs.get(i)).midiSign.getBlock().getLocation().equals(midiSign.getBlock().getLocation())) {
                  playing = true;
                  break;
-/*    */               }
-/*    */             }
+               }
+             }
              if (playing) this.plugin.stopMusic(midiSign); else
                this.plugin.learnMusic(midiSign, true);
-/*    */           }
+           }
          } else if (disable) this.plugin.stopMusic(midiSign); else
            this.plugin.learnMusic(midiSign, true);
-/*    */     }
+     }
      if (disable) return;
      	 checkSigns = new ArrayList<Block>();
      if ((event.getBlock().getRelative(1, 0, 0).getType() == Material.WALL_SIGN) && 
@@ -82,12 +82,12 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
            if ((this.plugin.songs.get(i)).midiSign.getBlock().getLocation().equals(midiSign.getBlock().getLocation())) {
              rc = this.plugin.songs.get(i);
              rc.toggle();
-/*    */           }
-/*    */       }
-/*    */     }
-/*    */   }
-/*    */ 
-/*    */   public void onSignChange(SignChangeEvent event) {
+           }
+       }
+     }
+   }
+ 
+   public void onSignChange(SignChangeEvent event) {
      if (!event.getLine(1).equalsIgnoreCase("[MIDI]")) return;
      //if (this.plugin.varCanCreate(event.getPlayer())) return;
 			try{
@@ -99,10 +99,5 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 			}
      event.getBlock().setType(Material.AIR);
      event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.SIGN));
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\jfmh\Downloads\midibankstest2.jar
- * Qualified Name:     net.myshelter.minecraft.midibanks.MidiBanksBlockListener
- * JD-Core Version:    0.6.0
- */
+   }
+ }
