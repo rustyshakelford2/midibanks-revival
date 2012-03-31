@@ -33,7 +33,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
        //if (!this.plugin.varCanUse(event.getPlayer())) return;
 				try{
 				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
-				if(!user.has("midibanks.can-use")|!event.getPlayer().isOp()) return;
+				if(!user.has("midibanks.can-use")|!event.getPlayer().isOp()|!event.getPlayer().hasPermission("midibanks.can-use")) return;
 				}
 				catch (NoClassDefFoundError e)
 				{
@@ -54,7 +54,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 				try
 				{
 				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
-				if(!user.has("midibanks.can-use")|!event.getPlayer().isOp()) return;
+				if(!user.has("midibanks.can-use")|!event.getPlayer().isOp()|!event.getPlayer().hasPermission("midibanks.can-use")) return;
 				}
 				catch (NoClassDefFoundError e)
 				{
