@@ -27,6 +27,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
  
  public class MidiBanks extends JavaPlugin
  {
@@ -294,7 +297,14 @@ import org.bukkit.plugin.java.JavaPlugin;
      if (!command.getName().equalsIgnoreCase("midi")) return false;
      if (args.length < 1) return true;
      boolean admin = false;
-     if ((!(sender instanceof Player)) || (((Player)sender).isOp())) admin = true;
+     try{
+    	 PermissionUser user = PermissionsEx.getUser((Player)sender);
+     if ((!(sender instanceof Player)) || ((Player)sender).isOp() | sender.hasPermission("midibanks.cmd") | user.has("midibanks.cmd")) admin = true;
+     }
+     catch (NoClassDefFoundError e)
+     {
+    	 
+     }
      boolean cannormalcmd = (admin);
      if ((args[0].equalsIgnoreCase("halt")) && (admin)) {
        this.player.cancel();

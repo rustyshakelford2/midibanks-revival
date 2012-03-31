@@ -4,6 +4,7 @@
  import org.bukkit.Material;
  import org.bukkit.block.Block;
  import org.bukkit.block.BlockFace;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
  import org.bukkit.event.block.BlockRedstoneEvent;
  import org.bukkit.event.block.SignChangeEvent;
@@ -20,7 +21,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
    {
      this.plugin = plugin;
    }
- 
+   	@EventHandler
    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
      if (event.getBlock().getType() != Material.REDSTONE_WIRE) return;
      if (!this.plugin.redstone) return;
@@ -86,13 +87,13 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
        }
      }
    }
- 
+   @EventHandler
    public void onSignChange(SignChangeEvent event) {
      if (!event.getLine(1).equalsIgnoreCase("[MIDI]")) return;
      //if (this.plugin.varCanCreate(event.getPlayer())) return;
 			try{
 				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
-			if(!user.has("midibanks.can-create")| !event.getPlayer().isOp()) return;
+			if(!user.has("midibanks.can-create")| !event.getPlayer().isOp() | !event.getPlayer().hasPermission("midibanks.can-create")) return;
 			}
 				catch (NoClassDefFoundError e)
 			{
