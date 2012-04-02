@@ -1,7 +1,8 @@
 name: MidiBanks
 main: net.myshelter.minecraft.midibanks.MidiBanks
-author: Protected and jfmherokiller
+authors: [Protected, jfmherokiller]
 version: 1.5 API 1.2.4-R1.0
+description: A music helper plugin
 commands:
   midi:
     description: Auxiliary MIDI commands
