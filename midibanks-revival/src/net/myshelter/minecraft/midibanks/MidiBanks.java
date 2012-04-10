@@ -8,6 +8,7 @@ import java.util.EmptyStackException;
 import java.util.HashSet;
 import java.util.Stack;
 import java.util.Timer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,11 +27,15 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
- 
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.permission.Permission;
+import net.milkbowl.vault.permission.plugins.Permission_PermissionsBukkit.PermissionServerListener;
  public class MidiBanks extends JavaPlugin
  {
    protected MidiBanksBlockListener listener;
@@ -44,14 +49,43 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
    boolean disallowLoop = false;
    boolean redstone = true;
    public OutputPinHandler pinHandler;
+   private static final Logger log2 = Logger.getLogger("Minecraft");
+   private Permission perms = null;
  
    protected static void dolog(String msg)
    {
      log.info("[MidiBanks] " + msg);
    }
+   public boolean setupPermissions() 
+   {
+       RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+       perms = rsp.getProvider();
+       return perms != null;
+   }
+   public boolean Allowed (String Permissionstr,Player player)
+   {
+	boolean out = perms.has(player, Permissionstr);
+	return out;
+	   
+   }
    public void onEnable() {
+	   
+       Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
+       
+       if(x != null & x instanceof Vault) 
+       {
+    	   setupPermissions();
+    	   x = (Vault) x;
+           log2.info(String.format("[%s] Hooked %s %s", getDescription().getName(), x.getDescription().getName(), x.getDescription().getVersion()));
+       } 
+       else 
+       {
+           log2.warning(String.format("[%s] Vault was _NOT_ found! Disabling plugin.", getDescription().getName()));
+           log2.info(String.format("Get Vault here: http://dev.bukkit.org/server-mods/vault/"));
+           getPluginLoader().disablePlugin(this);
+          return;
+       }
      if (!getDataFolder().exists()) getDataFolder().mkdir();
- 
      this.listener = new MidiBanksBlockListener(this);
      this.plistener = new MidiBanksPlayerListener(this);
      this.wlistener = new MidiBanksWorldListener(this);
@@ -91,7 +125,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
  
    public void onDisable() {
      this.player.cancel();
-     dolog("Disabled.");
+     log.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
    }
  
    public void resetPlayer() {
@@ -116,8 +150,10 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
                if (dircontent.isDirectory())
                  dirs.push(dircontent);
          }
-       } catch (EmptyStackException localEmptyStackException) {
-       } catch (NullPointerException localNullPointerException) {
+       } 
+       catch (EmptyStackException localEmptyStackException) {
+       } 
+       catch (NullPointerException localNullPointerException) {
        }
      }
      if (midiFile.exists()) return midiFile;
@@ -131,10 +167,17 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
    protected void learnMusic(org.bukkit.block.Sign midiSign, boolean fromRS) {
      if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) return;
      stopMusic(midiSign);
-     int track = -1; int window = -1; int instrument = -1;
+     int track = -1; 
+     int window = -1; 
+     int instrument = -1;
      double tempoCoef = 1.0D;
      String chans = "l";
-     boolean chanCollapse = false; boolean shift = false; boolean loop = false; boolean display = false; boolean remrep = false; boolean repOctave = false;
+     boolean chanCollapse = false; 
+     boolean shift = false; 
+     boolean loop = false; 
+     boolean display = false; 
+     boolean remrep = false; 
+     boolean repOctave = false;
  
      ArrayList<Block> checkRedstone = new ArrayList<Block>();
      if (((org.bukkit.material.Sign)midiSign.getData()).getFacing() == BlockFace.NORTH)
@@ -297,23 +340,23 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
      if (!command.getName().equalsIgnoreCase("midi")) return false;
      if (args.length < 1) return true;
      boolean admin = false;
+     Player player = (Player) sender;
      try{
-    	 PermissionUser user = PermissionsEx.getUser((Player)sender);
-     if ((!(sender instanceof Player)) || ((Player)sender).isOp() | sender.hasPermission("midibanks.cmd") | user.has("midibanks.cmd")) admin = true;
+     if (Allowed("midibanks.cmd", player)) admin = true;
+//       if(player.isOp()) admin = true;
      }
      catch (NoClassDefFoundError e)
      {
     	 
      }
-     boolean cannormalcmd = (admin);
-     if ((args[0].equalsIgnoreCase("halt")) && (admin)) {
+     if ((args[0].equalsIgnoreCase("halt")) & (admin)) {
        this.player.cancel();
        resetPlayer();
      }
      int[] chans = null;
      int b;
      //Check <filename>
-     if ((args[0].equalsIgnoreCase("check")) && (args.length >= 2) && (cannormalcmd)) {
+     if ((args[0].equalsIgnoreCase("check")) && (args.length >= 2) & (admin == true)) {
        Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
        Matcher mFileName = pFileName.matcher(args[1]);
        if (mFileName.find()) try {
@@ -381,7 +424,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
      String bychan;
      int i;
      //channels <filename>
-     if ((args[0].equalsIgnoreCase("channels")) && (args.length >= 2) && (cannormalcmd)) {
+     if ((args[0].equalsIgnoreCase("channels")) & (args.length >= 2) & (admin == true)) {
        Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
        Matcher mFileName = pFileName.matcher(args[1]);
        if (mFileName.find()) try {
@@ -412,7 +455,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
        }
      }
      //list command
-     if ((args[0].equalsIgnoreCase("list")) && (cannormalcmd)) {
+     if ((args[0].equalsIgnoreCase("list")) & (admin == true)) {
        String result = "";
 				File[] Files;
        HashSet names = new HashSet();

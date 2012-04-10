@@ -1,6 +1,9 @@
  package net.myshelter.minecraft.midibanks;
  
  import java.util.ArrayList;
+import org.bukkit.plugin.java.JavaPlugin;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.plugin.PluginBase;
  import org.bukkit.Material;
  import org.bukkit.block.Block;
  import org.bukkit.block.BlockFace;
@@ -9,20 +12,21 @@ import org.bukkit.event.Listener;
  import org.bukkit.event.block.BlockRedstoneEvent;
  import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
- 
+import net.myshelter.minecraft.midibanks.MidiBanks;
  public class MidiBanksBlockListener implements Listener
  {
    MidiBanks plugin;
+   private Permission perms = null;
  
    public MidiBanksBlockListener(MidiBanks plugin)
    {
      this.plugin = plugin;
    }
    	@EventHandler
-   public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+   public void onBlockRedstoneChange(BlockRedstoneEvent event)
+   	{
      if (event.getBlock().getType() != Material.REDSTONE_WIRE) return;
      if (!this.plugin.redstone) return;
      boolean disable = false;
@@ -88,12 +92,13 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
      }
    }
    @EventHandler
-   public void onSignChange(SignChangeEvent event) {
+   public void onSignChange(SignChangeEvent event) 
+   {
      if (!event.getLine(1).equalsIgnoreCase("[MIDI]")) return;
      //if (this.plugin.varCanCreate(event.getPlayer())) return;
 			try{
-				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
-			if(!user.has("midibanks.can-create")| !event.getPlayer().isOp() | !event.getPlayer().hasPermission("midibanks.can-create")) return;
+//			if(!plugin.Allowed("midibanks.can-create",event.getPlayer())) return;
+			if(!event.getPlayer().isOp()) return;
 			}
 				catch (NoClassDefFoundError e)
 			{
