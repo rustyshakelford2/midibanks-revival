@@ -1,20 +1,19 @@
  package net.myshelter.minecraft.midibanks;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.permission.Permission;
+
  import org.bukkit.Material;
  import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
  import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
- 
+import org.bukkit.event.player.PlayerInteractEvent; 
  public class MidiBanksPlayerListener implements Listener
  {
    MidiBanks plugin;
    protected static final Logger log = Logger.getLogger("Minecraft");
+   public static Permission perms = null;
    protected static void dolog(String msg)
    {
      log.info("[MidiBanks] " + msg);
@@ -25,15 +24,18 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
      this.plugin = plugin;
    }
  	@EventHandler
-   public void onPlayerInteract(PlayerInteractEvent event) {
+   public void onPlayerInteract(PlayerInteractEvent event)
+ 	{
+ 		
      if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
        if (event.getClickedBlock().getType() != Material.WALL_SIGN) return;
        Sign midiSign = (Sign)event.getClickedBlock().getState();
        if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) return;
        //if (!this.plugin.varCanUse(event.getPlayer())) return;
 				try{
-				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
-				if(!user.has("midibanks.can-use")|!event.getPlayer().isOp()|!event.getPlayer().hasPermission("midibanks.can-use")) return;
+				
+				if(!plugin.Allowed("midibanks.can-use",event.getPlayer())) return;
+//				if(!event.getPlayer().isOp()) return;
 				}
 				catch (NoClassDefFoundError e)
 				{
@@ -53,8 +55,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
        if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) return;
 				try
 				{
-				PermissionUser user = PermissionsEx.getUser(event.getPlayer());
-				if(!user.has("midibanks.can-use")|!event.getPlayer().isOp()|!event.getPlayer().hasPermission("midibanks.can-use")) return;
+				if(!plugin.Allowed("midibanks.can-use", event.getPlayer())) return;
+//				if(!event.getPlayer().isOp()) return;
 				}
 				catch (NoClassDefFoundError e)
 				{
