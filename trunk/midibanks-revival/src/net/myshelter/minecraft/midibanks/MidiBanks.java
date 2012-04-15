@@ -342,9 +342,9 @@ import net.milkbowl.vault.permission.plugins.Permission_PermissionsBukkit.Permis
      boolean admin = false;
      Player player = (Player) sender;
      try{
-     if (Allowed("midibanks.cmd", player)) admin = true;
+if (Allowed("midibanks.cmd", player)) admin = true;
 //       if(player.isOp()) admin = true;
-     }
+    	 }
      catch (NoClassDefFoundError e)
      {
     	 
@@ -355,73 +355,8 @@ import net.milkbowl.vault.permission.plugins.Permission_PermissionsBukkit.Permis
      }
      int[] chans = null;
      int b;
-     //Check <filename>
-     if ((args[0].equalsIgnoreCase("check")) && (args.length >= 2) & (admin == true)) {
-       Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
-       Matcher mFileName = pFileName.matcher(args[1]);
-       if (mFileName.find()) try {
-           File midiFile = getMidiFile(args[1]);
-           if (midiFile == null) return true;
-           Sequence midi = MidiSystem.getSequence(midiFile);
-           int i;
-           if (args.length >= 3)
-           {
-             int track = Integer.parseInt(args[2], 16);
-             if ((track >= 0) && (track < midi.getTracks().length)) {
-               sender.sendMessage("== MIDI Sequence " + args[1] + ".mid - Track " + Integer.toHexString(track) + " ==");
-               Track track11 = midi.getTracks()[track];
-               sender.sendMessage("Length: " + track11.ticks() + " ticks, " + track11.size() + " events");
-               int count = 0; int chanc = 0;
-               chans = new int[16];
-               for (int i1 = 0; i1 < chans.length; i1++) chans[i1] = 0;
-               for (int i1 = 0; i1 < track11.size(); i1++) {
-                 if (track11.get(i1).getMessage().getStatus() >> 4 == 9) {
-                   count++;
-                   chans[(track11.get(i1).getMessage().getStatus() & 0xF)] += 1;
-                 }
-               }
-               String bychan = "";
-               for (i = 0; i < chans.length; i++) {
-                 if (chans[i] > 0) {
-                   chanc++;
-                   bychan = bychan + Integer.toHexString(i) + ":" + chans[i] + " ";
-                 }
-               }
-               sender.sendMessage("Note ONs: " + count + " (" + chanc + " channel(s) used)");
-               sender.sendMessage(bychan); 
-             }
-             sender.sendMessage("No such track in this sequence."); 
-           }
- 
-           sender.sendMessage("== MIDI Sequence " + args[1] + ".mid ==");
-           Double secs = Double.valueOf(midi.getMicrosecondLength() / 1000000.0D);
-           sender.sendMessage("Length: " + String.format("%.2f", new Object[] { secs }) + "s, " + midi.getTickLength() + " ticks");
-           int a = 0; b = 0;
-     		Track track1 = null;
-           String bychan = Integer.toString((i = (int) midi.getTracks().length)); for ( i = 0; chans[i] < bychan.length(); i++) 
-					{ 
-             //if (track1.size() > 20) a++;
-             //if (track1.ticks() >= 0.8D * midi.getTickLength()) continue; b++;
-           }
-           sender.sendMessage("Tracks: " + midi.getTracks().length + " total, " + a + " significant, " + b + " long");
-           if (midi.getDivisionType() == 0.0F)
-             sender.sendMessage("Tempo: PPQ " + midi.getResolution());
-           if (midi.getDivisionType() == 24.0F)
-             sender.sendMessage("Tempo: " + midi.getResolution() * 24 + " tick/s (est. tick length " + String.format("%.2f", new Object[] { Double.valueOf(1000.0D / (midi.getResolution() * 24)) }) + "ms)");
-           if (midi.getDivisionType() == 25.0F)
-             sender.sendMessage("Tempo: " + midi.getResolution() * 25 + " tick/s (est. tick length " + String.format("%.2f", new Object[] { Double.valueOf(1000.0D / (midi.getResolution() * 25)) }) + "ms)");
-           if (midi.getDivisionType() == 30.0F)
-             sender.sendMessage("Tempo: " + midi.getResolution() * 30 + " tick/s (est. tick length " + String.format("%.2f", new Object[] { Double.valueOf(1000.0D / (midi.getResolution() * 30)) }) + "ms)");
-           if (midi.getDivisionType() != 29.969999F)  sender.sendMessage("Tempo: " + midi.getResolution() * 29.969999999999999D + " tick/s (est. tick length " + String.format("%.2f", new Object[] { Double.valueOf(1000.0D / (midi.getResolution() * 29.969999999999999D)) }) + "ms)");
-         }
-         catch (InvalidMidiDataException imde) {
-           sender.sendMessage("Error reading MIDI data. Is this a MIDI file?");
-         } catch (IOException ioe) {
-           sender.sendMessage("No such file!");
-         } else
-         sender.sendMessage("Invalid filename. Filenames can only have letters, numbers, underscores and dashes.");
-     }
      String bychan;
+     String bychan2;
      int i;
      //channels <filename>
      if ((args[0].equalsIgnoreCase("channels")) & (args.length >= 2) & (admin == true)) {
@@ -441,6 +376,7 @@ import net.milkbowl.vault.permission.plugins.Permission_PermissionsBukkit.Permis
              }
            }
            bychan = "";
+           bychan2 = "";
            for (i = 0; i < chans1.length; i++) {
              if (chans1[i] != false)
                bychan = bychan + Integer.toHexString(i) + " ";

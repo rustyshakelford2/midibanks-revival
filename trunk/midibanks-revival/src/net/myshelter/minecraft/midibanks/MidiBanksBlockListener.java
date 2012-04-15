@@ -97,8 +97,8 @@ import net.myshelter.minecraft.midibanks.MidiBanks;
      if (!event.getLine(1).equalsIgnoreCase("[MIDI]")) return;
      //if (this.plugin.varCanCreate(event.getPlayer())) return;
 			try{
-//			if(!plugin.Allowed("midibanks.can-create",event.getPlayer())) return;
-			if(!event.getPlayer().isOp()) return;
+		if(plugin.Allowed("midibanks.can-create",event.getPlayer())) return;
+			//if(!event.getPlayer().isOp()) return;
 			}
 				catch (NoClassDefFoundError e)
 			{
