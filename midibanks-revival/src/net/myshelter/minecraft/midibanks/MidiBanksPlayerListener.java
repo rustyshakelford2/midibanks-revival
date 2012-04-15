@@ -35,7 +35,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 				try{
 				
 				if(!plugin.Allowed("midibanks.can-use",event.getPlayer())) return;
-//				if(!event.getPlayer().isOp()) return;
 				}
 				catch (NoClassDefFoundError e)
 				{

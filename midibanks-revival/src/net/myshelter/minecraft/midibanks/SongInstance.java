@@ -155,7 +155,8 @@
        }
      if (loopnow)
        this.plugin.learnMusic(this.midiSign);
-     if (theend) {
+     if (theend) 
+     {
        for (int i = 0; i < this.chans.length(); i++)
          if ((this.chans.charAt(i) == 'z') || (this.chans.charAt(i) == 'm'))
            this.plugin.pinHandler.outputPin(this.midiSign.getBlock().getRelative(this.sx * (i + 2), 0, this.sz * (i + 2)), SongEvent.END);
