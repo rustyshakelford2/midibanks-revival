@@ -34,9 +34,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MidiBanks extends JavaPlugin {
-	protected MidiBanksBlockListener listener;
-	protected MidiBanksPlayerListener plistener;
-	protected MidiBanksWorldListener wlistener;
+	protected MidiBanksListeners listener;
+	protected MidiBanksListeners plistener;
+	protected MidiBanksListeners wlistener;
 	protected Timer player;
 	protected ArrayList<SongInstance> songs;
 	protected static final Logger log = Logger.getLogger("Minecraft");
@@ -65,17 +65,19 @@ public class MidiBanks extends JavaPlugin {
 
 	}
 
+	@Override
 	public void onEnable() {
 
-		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
+		Plugin vault = this.getServer().getPluginManager().getPlugin("Vault");
 
-		if (x != null & x instanceof Vault) {
+		if (vault != null & vault instanceof Vault) {
 			setupPermissions();
-			x = (Vault) x;
-			log2.info(String.format("[%s] Hooked %s %s", getDescription()
-					.getName(), x.getDescription().getName(), x
-					.getDescription().getVersion()));
-		} else {
+			log2.info(String.format("[%s] Hooked %s %s", 
+					getDescription().getName(), vault.getDescription().getName(), 
+					vault.getDescription().getVersion()));
+		} 
+		else 
+		{
 			log2.warning(String.format(
 					"[%s] Vault was _NOT_ found! Disabling plugin.",
 					getDescription().getName()));
@@ -86,9 +88,9 @@ public class MidiBanks extends JavaPlugin {
 		}
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
-		this.listener = new MidiBanksBlockListener(this);
-		this.plistener = new MidiBanksPlayerListener(this);
-		this.wlistener = new MidiBanksWorldListener(this);
+		this.listener = new MidiBanksListeners(this);
+		this.plistener = new MidiBanksListeners(this);
+		this.wlistener = new MidiBanksListeners(this);
 		this.songs = new ArrayList();
 		this.disallowAutostart = getConfig().getBoolean("disallow-autostart",
 				false);
@@ -126,6 +128,7 @@ public class MidiBanks extends JavaPlugin {
 		dolog("Done; found " + count + " A banks.");
 	}
 
+	@Override
 	public void onDisable() {
 		this.player.cancel();
 		log.info(String.format("[%s] Disabled Version %s", getDescription()
@@ -327,36 +330,37 @@ public class MidiBanks extends JavaPlugin {
 
 				if (track < 0) {
 					for (int i = 0; i < midi.getTracks().length; i++) {
-						SongInstance si = new SongInstance(this, midiSign,
+						SongInstance SongInst = new SongInstance(this, midiSign,
 								midi.getTracks()[i], chans);
-						si.track = i;
-						si.resolution = Math.floor(midi.getResolution() / 24);
-						si.chanCollapse = chanCollapse;
-						si.shift = shift;
-						si.loop = loop;
-						si.display = display;
-						si.tempoCoef = tempoCoef;
-						si.remRepeated = remrep;
-						si.window = window;
-						si.repOctave = repOctave;
-						si.instrument = Integer.valueOf(instrument);
-						this.songs.add(si);
+						SongInst.track = i;
+						SongInst.resolution = Math.floor(midi.getResolution() / 24);
+						SongInst.chanCollapse = chanCollapse;
+						SongInst.shift = shift;
+						SongInst.loop = loop;
+						SongInst.display = display;
+						SongInst.tempoCoef = tempoCoef;
+						SongInst.remRepeated = remrep;
+						SongInst.window = window;
+						SongInst.repOctave = repOctave;
+						SongInst.instrument = Integer.valueOf(instrument);
+						this.songs.add(SongInst);
 					}
-				} else {
-					SongInstance si = new SongInstance(this, midiSign,
-							midi.getTracks()[track], chans);
-					si.track = track;
-					si.resolution = Math.floor(midi.getResolution() / 24);
-					si.chanCollapse = chanCollapse;
-					si.shift = shift;
-					si.loop = loop;
-					si.display = display;
-					si.tempoCoef = tempoCoef;
-					si.remRepeated = remrep;
-					si.window = window;
-					si.repOctave = repOctave;
-					si.instrument = Integer.valueOf(instrument);
-					this.songs.add(si);
+				} 
+				else 
+				{
+					SongInstance SongInst = new SongInstance(this, midiSign,midi.getTracks()[track], chans);
+					SongInst.track = track;
+					SongInst.resolution = Math.floor(midi.getResolution() / 24);
+					SongInst.chanCollapse = chanCollapse;
+					SongInst.shift = shift;
+					SongInst.loop = loop;
+					SongInst.display = display;
+					SongInst.tempoCoef = tempoCoef;
+					SongInst.remRepeated = remrep;
+					SongInst.window = window;
+					SongInst.repOctave = repOctave;
+					SongInst.instrument = Integer.valueOf(instrument);
+					this.songs.add(SongInst);
 				}
 				midiSign.setLine(0, "PLAYING");
 			} catch (InvalidMidiDataException imde) {
@@ -364,7 +368,8 @@ public class MidiBanks extends JavaPlugin {
 			} catch (IOException ioe) {
 				midiSign.setLine(0, "CAN'T READ FILE");
 			}
-		else {
+		else 
+		{
 			midiSign.setLine(0, "BAD FILENAME");
 		}
 		getServer().getScheduler().scheduleSyncDelayedTask(this,
@@ -377,7 +382,7 @@ public class MidiBanks extends JavaPlugin {
 				if (midiSign
 						.getBlock()
 						.getLocation()
-						.equals(((SongInstance) this.songs.get(i)).midiSign
+						.equals((this.songs.get(i)).midiSign
 								.getBlock().getLocation())) {
 					this.songs.remove(i);
 					i--;
@@ -391,16 +396,14 @@ public class MidiBanks extends JavaPlugin {
 	}
 
 	// Command area
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (!command.getName().equalsIgnoreCase("midi") || !(sender==(Player)sender))
-		{
-			dolog("you must be a player to use that");
+		if (!command.getName().equalsIgnoreCase("midi")) {
 			return false;
 		}
-			
-			
-		if (args.length < 1){
+
+		if (args.length < 1) {
 			return true;
 		}
 
@@ -514,6 +517,7 @@ public class MidiBanks extends JavaPlugin {
 		}
 		return true;
 	}
+
 	class UpdateSign implements Runnable {
 		private org.bukkit.block.Sign midiSign;
 
@@ -521,6 +525,7 @@ public class MidiBanks extends JavaPlugin {
 			this.midiSign = midiSign;
 		}
 
+		@Override
 		public void run() {
 			this.midiSign.update();
 		}
