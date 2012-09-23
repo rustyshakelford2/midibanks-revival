@@ -120,9 +120,9 @@ public class MidiBanks extends JavaPlugin {
 
 		dolog("Auto-starting A banks in currently loaded chunks...");
 		int count = 0;
-		for (World w : getServer().getWorlds()) {
-			for (Chunk c : w.getLoadedChunks()) {
-				for (BlockState cbs : c.getTileEntities())
+		for (World worldlist : getServer().getWorlds()) {
+			for (Chunk loadedChunkslist : worldlist.getLoadedChunks()) {
+				for (BlockState cbs : loadedChunkslist.getTileEntities())
 					if (cbs.getBlock().getType() == Material.WALL_SIGN) {
 						org.bukkit.block.Sign midiSign = (org.bukkit.block.Sign) cbs;
 						if ((!midiSign.getLine(1).equalsIgnoreCase("[MIDI]"))
@@ -233,7 +233,7 @@ public class MidiBanks extends JavaPlugin {
 				if (mNextSign.find()) {
 					BlockFace direction = ((org.bukkit.material.Sign) midiSign
 							.getData()).getFacing();
-					Block sb = null;
+					Block SelectedBlock = null;
 					int sx = 0;
 					int sz = 0;
 					if (direction == BlockFace.NORTH)
@@ -245,17 +245,17 @@ public class MidiBanks extends JavaPlugin {
 					if (direction == BlockFace.WEST)
 						sx = -1;
 					if (mNextSign.group(1).equals("l"))
-						sb = midiSign.getBlock().getRelative(sx, 0, sz);
+						SelectedBlock = midiSign.getBlock().getRelative(sx, 0, sz);
 					if (mNextSign.group(1).equals("r"))
-						sb = midiSign.getBlock().getRelative(-1 * sx, 0,
+						SelectedBlock = midiSign.getBlock().getRelative(-1 * sx, 0,
 								-1 * sz);
 					if (mNextSign.group(1).equals("u"))
-						sb = midiSign.getBlock().getRelative(0, 1, 0);
+						SelectedBlock = midiSign.getBlock().getRelative(0, 1, 0);
 					if (mNextSign.group(1).equals("d"))
-						sb = midiSign.getBlock().getRelative(0, -1, 0);
-					if ((sb.getType() == Material.WALL_SIGN)
-							|| (sb.getType() == Material.SIGN_POST)) {
-						org.bukkit.block.Sign setSign = (org.bukkit.block.Sign) sb
+						SelectedBlock = midiSign.getBlock().getRelative(0, -1, 0);
+					if ((SelectedBlock.getType() == Material.WALL_SIGN)
+							|| (SelectedBlock.getType() == Material.SIGN_POST)) {
+						org.bukkit.block.Sign setSign = (org.bukkit.block.Sign) SelectedBlock
 								.getState();
 						settings = "";
 						for (int i = 0; i < 4; i++)
@@ -432,6 +432,15 @@ public class MidiBanks extends JavaPlugin {
 		String bychan;
 		String bychan2;
 		int i;
+		//playsong <filename>
+		if ((args[0].equalsIgnoreCase("playsong")) & (args.length >= 2)
+			& (admin = true)) {
+			Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
+			Matcher mFileName = pFileName.matcher(args[1]);
+			if (mFileName.find()) {
+				
+			}
+		}
 		// channels <filename>
 		if ((args[0].equalsIgnoreCase("channels")) & (args.length >= 2)
 				& (admin == true)) {
@@ -445,20 +454,20 @@ public class MidiBanks extends JavaPlugin {
 					Sequence midi = MidiSystem.getSequence(midiFile);
 					sender.sendMessage("== MIDI Sequence " + args[1]
 							+ ".mid - Channels ==");
-					boolean[] chans1 = new boolean[16];
-					for (int interger1 = 0; interger1 < chans1.length; interger1++)
-						chans1[interger1] = false;
-					for (Track track12 : midi.getTracks()) {
-						for (int i1 = 0; i1 < track12.size(); i1++) {
-							if (track12.get(i1).getMessage().getStatus() >> 4 == 9)
-								chans1[(track12.get(i1).getMessage()
+					boolean[] Channels = new boolean[16];
+					for (int numberofchannels = 0; numberofchannels < Channels.length; numberofchannels++)
+						Channels[numberofchannels] = false;
+					for (Track Tracks : midi.getTracks()) {
+						for (int numoftracks = 0; numoftracks < Tracks.size(); numoftracks++) {
+							if (Tracks.get(numoftracks).getMessage().getStatus() >> 4 == 9)
+								Channels[(Tracks.get(numoftracks).getMessage()
 										.getStatus() & 0xF)] = true;
 						}
 					}
 					bychan = "";
 					bychan2 = "";
-					for (i = 0; i < chans1.length; i++) {
-						if (chans1[i] != false)
+					for (i = 0; i < Channels.length; i++) {
+						if (Channels[i] != false)
 							bychan = bychan + Integer.toHexString(i) + " ";
 					}
 					sender.sendMessage("Used: " + bychan);

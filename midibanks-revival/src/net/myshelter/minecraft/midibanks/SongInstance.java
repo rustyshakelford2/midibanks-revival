@@ -31,8 +31,8 @@ public class SongInstance {
 	private int count = 0;
 	private int[] latestNote;
 	private boolean paused = false;
-	int sx = 0;
-	int sz = 0;
+	int SideX = 0;
+	int SideZ = 0;
 	Block firstBlock;
 
 	protected SongInstance(MidiBanks plugin, org.bukkit.block.Sign midiSign,
@@ -44,18 +44,18 @@ public class SongInstance {
 		BlockFace direction = ((org.bukkit.material.Sign) midiSign.getData())
 				.getFacing();
 		if (direction == BlockFace.NORTH) {
-			sx = 1;
+			SideX = 1;
 		}
 		if (direction == BlockFace.SOUTH) {
-			sx = -1;
+			SideX = -1;
 		}
 		if (direction == BlockFace.EAST) {
-			sz = 1;
+			SideZ = 1;
 		}
 		if (direction == BlockFace.WEST) {
-			sz = -1;
+			SideZ = -1;
 		}
-		firstBlock = midiSign.getBlock().getRelative(sx * 2, 0, sz * 2);
+		firstBlock = midiSign.getBlock().getRelative(SideX * 2, 0, SideZ * 2);
 
 		latestNote = new int[16];
 		for (int i = 0; i < latestNote.length; i++) {
@@ -74,8 +74,8 @@ public class SongInstance {
 					plugin.pinHandler
 							.outputPin(
 									midiSign.getBlock().getRelative(
-											sx * (chans.length() + 1), 0,
-											sz * (chans.length() + 1)),
+											SideX * (chans.length() + 1), 0,
+											SideZ * (chans.length() + 1)),
 									SongEvent.START);
 				}
 			}
@@ -104,10 +104,10 @@ public class SongInstance {
 			if (music.get(event).getMessage().getStatus() >> 4 != 9) {
 				continue;
 			}
-			ArrayList<Block> relBlocks = new ArrayList();
+			ArrayList<Block> realBlocks = new ArrayList();
 			int channel = 0;
 			if (chanCollapse) {
-				relBlocks.add(firstBlock);
+				realBlocks.add(firstBlock);
 			} else {
 				channel = music.get(event).getMessage().getStatus() & 0xF;
 
@@ -115,17 +115,17 @@ public class SongInstance {
 					String si = String.valueOf(chans.charAt(i));
 					if ((si.equals(Integer.toHexString(channel)))
 							|| (si.equals("o"))) {
-						relBlocks.add(midiSign.getBlock().getRelative(
-								sx * (i + 2), 0, sz * (i + 2)));
+						realBlocks.add(midiSign.getBlock().getRelative(
+								SideX * (i + 2), 0, SideZ * (i + 2)));
 					}
 					if (si.equals("n")) {
 						plugin.pinHandler.outputPin(midiSign.getBlock()
-								.getRelative(sx * (i + 2), 0, sz * (i + 2)),
+								.getRelative(SideX * (i + 2), 0, SideZ * (i + 2)),
 								SongEvent.NOTE);
 					}
 				}
 			}
-			if (relBlocks.size() <= 0) {
+			if (realBlocks.size() <= 0) {
 				continue;
 			}
 			count += 1;
@@ -165,7 +165,7 @@ public class SongInstance {
 				{
 					continue;
 				}
-				for (Block relBlock : relBlocks) {
+				for (Block relBlock : realBlocks) {
 					if ((relBlock == null)
 							|| (relBlock.getType() != Material.NOTE_BLOCK)) {
 						continue;
@@ -207,7 +207,7 @@ public class SongInstance {
 			for (int i = 0; i < chans.length(); i++) {
 				if ((chans.charAt(i) == 'z') || (chans.charAt(i) == 'm')) {
 					plugin.pinHandler.outputPin(midiSign.getBlock()
-							.getRelative(sx * (i + 2), 0, sz * (i + 2)),
+							.getRelative(SideX * (i + 2), 0, SideZ * (i + 2)),
 							SongEvent.END);
 				}
 			}
