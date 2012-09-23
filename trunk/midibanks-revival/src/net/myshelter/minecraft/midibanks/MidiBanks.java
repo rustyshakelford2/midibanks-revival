@@ -65,8 +65,8 @@ public class MidiBanks extends JavaPlugin {
 	public boolean Allowed(String Permissionstr, Player player) {
 		if (novault == false) {
 			hasperms = perms.has(player, Permissionstr);
-		} if(novault == true)
-		{
+		}
+		if (novault == true) {
 			hasperms = player.hasPermission(Permissionstr);
 		}
 		return hasperms;
@@ -80,17 +80,13 @@ public class MidiBanks extends JavaPlugin {
 
 		if (vault != null & vault instanceof Vault) {
 			setupPermissions();
-			log2.info(String.format("[%s] Hooked %s %s", 
-					getDescription().getName(), vault.getDescription().getName(), 
-					vault.getDescription().getVersion()));
-		} 
-		else 
-		{
-			log2.warning(String.format(
-					"[%s] Vault was _NOT_ found! Falling back to bukkit permissions",
-					getDescription().getName()));
-			log2.info(String
-					.format("Get Vault here: http://dev.bukkit.org/server-mods/vault/"));
+			log2.info(String.format("[%s] Hooked %s %s", getDescription()
+					.getName(), vault.getDescription().getName(), vault
+					.getDescription().getVersion()));
+		} else {
+			log2.warning(String
+					.format("[%s] Vault was _NOT_ found! Falling back to bukkit permissions",
+							getDescription().getName()));
 			novault = true;
 			return;
 		}
@@ -245,14 +241,17 @@ public class MidiBanks extends JavaPlugin {
 					if (direction == BlockFace.WEST)
 						sx = -1;
 					if (mNextSign.group(1).equals("l"))
-						SelectedBlock = midiSign.getBlock().getRelative(sx, 0, sz);
+						SelectedBlock = midiSign.getBlock().getRelative(sx, 0,
+								sz);
 					if (mNextSign.group(1).equals("r"))
-						SelectedBlock = midiSign.getBlock().getRelative(-1 * sx, 0,
-								-1 * sz);
+						SelectedBlock = midiSign.getBlock().getRelative(
+								-1 * sx, 0, -1 * sz);
 					if (mNextSign.group(1).equals("u"))
-						SelectedBlock = midiSign.getBlock().getRelative(0, 1, 0);
+						SelectedBlock = midiSign.getBlock()
+								.getRelative(0, 1, 0);
 					if (mNextSign.group(1).equals("d"))
-						SelectedBlock = midiSign.getBlock().getRelative(0, -1, 0);
+						SelectedBlock = midiSign.getBlock().getRelative(0, -1,
+								0);
 					if ((SelectedBlock.getType() == Material.WALL_SIGN)
 							|| (SelectedBlock.getType() == Material.SIGN_POST)) {
 						org.bukkit.block.Sign setSign = (org.bukkit.block.Sign) SelectedBlock
@@ -338,10 +337,11 @@ public class MidiBanks extends JavaPlugin {
 
 				if (track < 0) {
 					for (int i = 0; i < midi.getTracks().length; i++) {
-						SongInstance SongInst = new SongInstance(this, midiSign,
-								midi.getTracks()[i], chans);
+						SongInstance SongInst = new SongInstance(this,
+								midiSign, midi.getTracks()[i], chans);
 						SongInst.track = i;
-						SongInst.resolution = Math.floor(midi.getResolution() / 24);
+						SongInst.resolution = Math
+								.floor(midi.getResolution() / 24);
 						SongInst.chanCollapse = chanCollapse;
 						SongInst.shift = shift;
 						SongInst.loop = loop;
@@ -353,10 +353,9 @@ public class MidiBanks extends JavaPlugin {
 						SongInst.instrument = Integer.valueOf(instrument);
 						this.songs.add(SongInst);
 					}
-				} 
-				else 
-				{
-					SongInstance SongInst = new SongInstance(this, midiSign,midi.getTracks()[track], chans);
+				} else {
+					SongInstance SongInst = new SongInstance(this, midiSign,
+							midi.getTracks()[track], chans);
 					SongInst.track = track;
 					SongInst.resolution = Math.floor(midi.getResolution() / 24);
 					SongInst.chanCollapse = chanCollapse;
@@ -376,8 +375,7 @@ public class MidiBanks extends JavaPlugin {
 			} catch (IOException ioe) {
 				midiSign.setLine(0, "CAN'T READ FILE");
 			}
-		else 
-		{
+		else {
 			midiSign.setLine(0, "BAD FILENAME");
 		}
 		getServer().getScheduler().scheduleSyncDelayedTask(this,
@@ -390,8 +388,8 @@ public class MidiBanks extends JavaPlugin {
 				if (midiSign
 						.getBlock()
 						.getLocation()
-						.equals((this.songs.get(i)).midiSign
-								.getBlock().getLocation())) {
+						.equals((this.songs.get(i)).midiSign.getBlock()
+								.getLocation())) {
 					this.songs.remove(i);
 					i--;
 				}
@@ -432,13 +430,13 @@ public class MidiBanks extends JavaPlugin {
 		String bychan;
 		String bychan2;
 		int i;
-		//playsong <filename>
+		// playsong <filename>
 		if ((args[0].equalsIgnoreCase("playsong")) & (args.length >= 2)
-			& (admin = true)) {
+				& (admin = true)) {
 			Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
 			Matcher mFileName = pFileName.matcher(args[1]);
 			if (mFileName.find()) {
-				
+
 			}
 		}
 		// channels <filename>
@@ -459,7 +457,8 @@ public class MidiBanks extends JavaPlugin {
 						Channels[numberofchannels] = false;
 					for (Track Tracks : midi.getTracks()) {
 						for (int numoftracks = 0; numoftracks < Tracks.size(); numoftracks++) {
-							if (Tracks.get(numoftracks).getMessage().getStatus() >> 4 == 9)
+							if (Tracks.get(numoftracks).getMessage()
+									.getStatus() >> 4 == 9)
 								Channels[(Tracks.get(numoftracks).getMessage()
 										.getStatus() & 0xF)] = true;
 						}
