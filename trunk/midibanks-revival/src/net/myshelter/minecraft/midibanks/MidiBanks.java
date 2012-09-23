@@ -47,6 +47,9 @@ public class MidiBanks extends JavaPlugin {
 	public OutputPinHandler pinHandler;
 	private static final Logger log2 = Logger.getLogger("Minecraft");
 	private Permission perms = null;
+	private org.bukkit.permissions.Permission permsbackup = null;
+	boolean novault = false;
+	boolean hasperms = false;
 
 	protected static void dolog(String msg) {
 		log.info("[MidiBanks] " + msg);
@@ -60,8 +63,13 @@ public class MidiBanks extends JavaPlugin {
 	}
 
 	public boolean Allowed(String Permissionstr, Player player) {
-		boolean out = perms.has(player, Permissionstr);
-		return out;
+		if (novault == false) {
+			hasperms = perms.has(player, Permissionstr);
+		} if(novault == true)
+		{
+			hasperms = player.hasPermission(Permissionstr);
+		}
+		return hasperms;
 
 	}
 
@@ -79,11 +87,11 @@ public class MidiBanks extends JavaPlugin {
 		else 
 		{
 			log2.warning(String.format(
-					"[%s] Vault was _NOT_ found! Disabling plugin.",
+					"[%s] Vault was _NOT_ found! Falling back to bukkit permissions",
 					getDescription().getName()));
 			log2.info(String
 					.format("Get Vault here: http://dev.bukkit.org/server-mods/vault/"));
-			getPluginLoader().disablePlugin(this);
+			novault = true;
 			return;
 		}
 		if (!getDataFolder().exists())
