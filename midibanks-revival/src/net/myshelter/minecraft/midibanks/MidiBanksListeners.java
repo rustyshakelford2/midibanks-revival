@@ -33,7 +33,7 @@ public class MidiBanksListeners implements Listener {
 		log.info("[MidiBanks] " + msg);
 	}
 
-	//Sign A parameter
+	// Sign A parameter
 	@EventHandler
 	public void onChunkLoaded(ChunkLoadEvent event) {
 		if (plugin.disallowAutostart) {
@@ -51,7 +51,7 @@ public class MidiBanksListeners implements Listener {
 		}
 	}
 
-	//Sign A parameter
+	// Sign A parameter
 	@EventHandler
 	public void onChunkUnLoaded(ChunkUnloadEvent event) {
 		for (BlockState cbs : event.getChunk().getTileEntities()) {
@@ -64,7 +64,7 @@ public class MidiBanksListeners implements Listener {
 		}
 	}
 
-	//Sign interactions
+	// Sign interactions
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 

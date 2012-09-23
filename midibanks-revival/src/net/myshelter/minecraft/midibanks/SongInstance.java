@@ -71,12 +71,11 @@ public class SongInstance {
 					chans += ochans.charAt(i);
 				}
 				if ((ochans.charAt(i) == 's') || (ochans.charAt(i) == 'm')) {
-					plugin.pinHandler
-							.outputPin(
-									midiSign.getBlock().getRelative(
-											SideX * (chans.length() + 1), 0,
-											SideZ * (chans.length() + 1)),
-									SongEvent.START);
+					plugin.pinHandler.outputPin(
+							midiSign.getBlock().getRelative(
+									SideX * (chans.length() + 1), 0,
+									SideZ * (chans.length() + 1)),
+							SongEvent.START);
 				}
 			}
 			chans = chans.substring(0,
@@ -119,8 +118,9 @@ public class SongInstance {
 								SideX * (i + 2), 0, SideZ * (i + 2)));
 					}
 					if (si.equals("n")) {
-						plugin.pinHandler.outputPin(midiSign.getBlock()
-								.getRelative(SideX * (i + 2), 0, SideZ * (i + 2)),
+						plugin.pinHandler.outputPin(
+								midiSign.getBlock().getRelative(
+										SideX * (i + 2), 0, SideZ * (i + 2)),
 								SongEvent.NOTE);
 					}
 				}
@@ -140,9 +140,7 @@ public class SongInstance {
 				if (latestNote[channel] != midiNote) {
 					latestNote[channel] = midiNote;
 				}
-			} 
-			else 
-			{
+			} else {
 				Integer iaux1 = 0;
 				if (window < 0) {
 					iaux1 = Integer.valueOf((midiNote + (shift ? 6 : -6)) % 24);
@@ -161,8 +159,7 @@ public class SongInstance {
 						}
 					}
 				}
-				if (iaux1.intValue() < 0) 
-				{
+				if (iaux1.intValue() < 0) {
 					continue;
 				}
 				for (Block relBlock : realBlocks) {
