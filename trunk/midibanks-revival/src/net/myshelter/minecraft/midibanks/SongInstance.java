@@ -168,13 +168,13 @@ public class SongInstance {
 						continue;
 					}
 					try {
-						NoteBlock nb = (NoteBlock) relBlock.getState();
+						NoteBlock noteblock = (NoteBlock) relBlock.getState();
 						if (instrument.intValue() > -1) {
-							nb.play(instrument.byteValue(), iaux1.byteValue());
+							noteblock.play(instrument.byteValue(), iaux1.byteValue());
 						} else {
-							nb.setRawNote(iaux1.byteValue());
-							nb.update();
-							nb.play();
+							noteblock.setRawNote(iaux1.byteValue());
+							noteblock.update();
+							noteblock.play();
 						}
 					} catch (NullPointerException localNullPointerException) {
 					}
