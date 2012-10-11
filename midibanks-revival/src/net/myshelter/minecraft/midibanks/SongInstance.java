@@ -170,7 +170,8 @@ public class SongInstance {
 					try {
 						NoteBlock noteblock = (NoteBlock) relBlock.getState();
 						if (instrument.intValue() > -1) {
-							noteblock.play(instrument.byteValue(), iaux1.byteValue());
+							noteblock.play(instrument.byteValue(),
+									iaux1.byteValue());
 						} else {
 							noteblock.setRawNote(iaux1.byteValue());
 							noteblock.update();

@@ -30,7 +30,7 @@ public class MidiBanksListeners implements Listener {
 	}
 
 	protected static void dolog(String msg) {
-		log.info("[MidiBanks] " + msg);
+		MidiBanksListeners.log.info("[MidiBanks] " + msg);
 	}
 
 	// Sign A parameter

@@ -13,27 +13,34 @@ public class MidiBanksOutputPinHandler implements OutputPinHandler {
 
 	private boolean buttonDepress(Block main, BlockFace side) {
 		Block aux = main.getRelative(side);
-		if (aux == null)
+		if (aux == null) {
 			return false;
-		if (aux.getType() != Material.STONE_BUTTON)
+		}
+		if (aux.getType() != Material.STONE_BUTTON) {
 			return false;
+		}
 		byte facing = (byte) (aux.getData() & 0x7);
-		if ((facing == 1) && (side != BlockFace.SOUTH))
+		if ((facing == 1) && (side != BlockFace.SOUTH)) {
 			return false;
-		if ((facing == 2) && (side != BlockFace.NORTH))
+		}
+		if ((facing == 2) && (side != BlockFace.NORTH)) {
 			return false;
-		if ((facing == 3) && (side != BlockFace.WEST))
+		}
+		if ((facing == 3) && (side != BlockFace.WEST)) {
 			return false;
-		if ((facing == 4) && (side != BlockFace.EAST))
+		}
+		if ((facing == 4) && (side != BlockFace.EAST)) {
 			return false;
+		}
 		aux.setData((byte) (aux.getData() | 0x8));
 		return true;
 	}
 
 	@Override
 	public void outputPin(Block main, SongEvent event) {
-		if (!this.redstone)
+		if (!redstone) {
 			return;
+		}
 		if ((main.getType() == Material.STONE_PLATE)
 				|| (main.getType() == Material.WOOD_PLATE)) {
 			main.setData((byte) 1);
@@ -45,13 +52,17 @@ public class MidiBanksOutputPinHandler implements OutputPinHandler {
 			aux.setData((byte) 1);
 			return;
 		}
-		if (buttonDepress(main, BlockFace.NORTH))
+		if (buttonDepress(main, BlockFace.NORTH)) {
 			return;
-		if (buttonDepress(main, BlockFace.SOUTH))
+		}
+		if (buttonDepress(main, BlockFace.SOUTH)) {
 			return;
-		if (buttonDepress(main, BlockFace.EAST))
+		}
+		if (buttonDepress(main, BlockFace.EAST)) {
 			return;
-		if (buttonDepress(main, BlockFace.WEST))
+		}
+		if (buttonDepress(main, BlockFace.WEST)) {
 			return;
+		}
 	}
 }
