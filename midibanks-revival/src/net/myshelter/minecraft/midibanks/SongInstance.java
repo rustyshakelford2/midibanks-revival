@@ -83,6 +83,7 @@ public class SongInstance {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	protected void nextTick() {
 		if (paused) {
 			return;
@@ -103,6 +104,7 @@ public class SongInstance {
 			if (music.get(event).getMessage().getStatus() >> 4 != 9) {
 				continue;
 			}
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			ArrayList<Block> realBlocks = new ArrayList();
 			int channel = 0;
 			if (chanCollapse) {

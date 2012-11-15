@@ -49,6 +49,7 @@ public class MidiBanks extends JavaPlugin {
 	private Permission perms = null;
 	boolean novault = false;
 	boolean hasperms = false;
+	boolean opmode = false;
 
 	protected static void dolog(String msg) {
 		MidiBanks.log.info("[MidiBanks] " + msg);
@@ -62,16 +63,17 @@ public class MidiBanks extends JavaPlugin {
 	}
 
 	public boolean Allowed(String Permissionstr, Player player) {
-		if (novault == false) {
-			hasperms = perms.has(player, Permissionstr);
+		if (novault == false && opmode == false) {
+			hasperms = player.hasPermission(Permissionstr);
 		}
 		if (novault == true) {
-			hasperms = player.hasPermission(Permissionstr);
+			hasperms = perms.has(player,Permissionstr);
 		}
 		return hasperms;
 
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onEnable() {
 
@@ -100,9 +102,9 @@ public class MidiBanks extends JavaPlugin {
 		disallowAutostart = getConfig().getBoolean("disallow-autostart", false);
 		disallowLoop = getConfig().getBoolean("disallow-loop", false);
 		redstone = getConfig().getBoolean("redstone", true);
-
 		pinHandler = new MidiBanksOutputPinHandler(redstone);
-
+		opmode = getConfig().getBoolean("opmode",false);
+		saveDefaultConfig();
 		resetPlayer();
 		getServer().getPluginManager().registerEvents(plistener, this);
 		getServer().getPluginManager().registerEvents(listener, this);
@@ -149,6 +151,7 @@ public class MidiBanks extends JavaPlugin {
 		player.schedule(np, 20L, 20L);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public File getMidiFile(String name) {
 		File midiFile = new File(getDataFolder() + "/" + name + ".mid");
 		if (!midiFile.exists()) {
@@ -444,6 +447,7 @@ public class MidiBanks extends JavaPlugin {
 	}
 
 	// Command area
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
