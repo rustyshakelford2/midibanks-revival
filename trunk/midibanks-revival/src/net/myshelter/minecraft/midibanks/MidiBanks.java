@@ -63,6 +63,10 @@ public class MidiBanks extends JavaPlugin {
 	}
 
 	public boolean Allowed(String Permissionstr, Player player) {
+		if (opmode == true) {
+			hasperms = player.isOp();
+			return hasperms;
+		}
 		if (novault == false && opmode == false) {
 			hasperms = player.hasPermission(Permissionstr);
 		}
