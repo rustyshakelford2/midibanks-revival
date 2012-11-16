@@ -45,7 +45,6 @@ public class MidiBanks extends JavaPlugin {
 	boolean disallowLoop = false;
 	boolean redstone = true;
 	public OutputPinHandler pinHandler;
-	private static final Logger log2 = Logger.getLogger("Minecraft");
 	private Permission perms = null;
 	boolean novault = false;
 	boolean hasperms = false;
@@ -67,17 +66,16 @@ public class MidiBanks extends JavaPlugin {
 			hasperms = player.isOp();
 			return hasperms;
 		}
-		if (novault == false && opmode == false) {
+		if ((novault == false) && (opmode == false)) {
 			hasperms = player.hasPermission(Permissionstr);
 		}
 		if (novault == true) {
-			hasperms = perms.has(player,Permissionstr);
+			hasperms = perms.has(player, Permissionstr);
 		}
 		return hasperms;
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onEnable() {
 
@@ -85,11 +83,11 @@ public class MidiBanks extends JavaPlugin {
 
 		if ((vault != null) & (vault instanceof Vault)) {
 			setupPermissions();
-			MidiBanks.log2.info(String.format("[%s] Hooked %s %s",
+			MidiBanks.log.info(String.format("[%s] Hooked %s %s",
 					getDescription().getName(), vault.getDescription()
 							.getName(), vault.getDescription().getVersion()));
 		} else {
-			MidiBanks.log2
+			MidiBanks.log
 					.warning(String
 							.format("[%s] Vault was _NOT_ found! Falling back to bukkit permissions",
 									getDescription().getName()));
@@ -102,12 +100,12 @@ public class MidiBanks extends JavaPlugin {
 		listener = new MidiBanksListeners(this);
 		plistener = new MidiBanksListeners(this);
 		wlistener = new MidiBanksListeners(this);
-		songs = new ArrayList();
+		songs = new ArrayList<SongInstance>();
 		disallowAutostart = getConfig().getBoolean("disallow-autostart", false);
 		disallowLoop = getConfig().getBoolean("disallow-loop", false);
 		redstone = getConfig().getBoolean("redstone", true);
 		pinHandler = new MidiBanksOutputPinHandler(redstone);
-		opmode = getConfig().getBoolean("opmode",false);
+		opmode = getConfig().getBoolean("opmode", false);
 		saveDefaultConfig();
 		resetPlayer();
 		getServer().getPluginManager().registerEvents(plistener, this);
@@ -155,15 +153,14 @@ public class MidiBanks extends JavaPlugin {
 		player.schedule(np, 20L, 20L);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public File getMidiFile(String name) {
 		File midiFile = new File(getDataFolder() + "/" + name + ".mid");
 		if (!midiFile.exists()) {
-			Stack dirs = new Stack();
+			Stack<File> dirs = new Stack<File>();
 			dirs.push(getDataFolder());
 			try {
 				while (true) {
-					File thisdir = (File) dirs.pop();
+					File thisdir = dirs.pop();
 					midiFile = new File(thisdir + "/" + name + ".mid");
 					if (midiFile.exists()) {
 						break;
@@ -379,7 +376,7 @@ public class MidiBanks extends JavaPlugin {
 						}
 					}
 					if (realTempo > 0) {
-						tempoCoef *= 500000.0D / realTempo * 0.8D;
+						tempoCoef *= (500000.0D / realTempo) * 0.8D;
 					}
 
 				}
@@ -451,7 +448,6 @@ public class MidiBanks extends JavaPlugin {
 	}
 
 	// Command area
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
@@ -507,8 +503,8 @@ public class MidiBanks extends JavaPlugin {
 					}
 					for (Track Tracks : midi.getTracks()) {
 						for (int numoftracks = 0; numoftracks < Tracks.size(); numoftracks++) {
-							if (Tracks.get(numoftracks).getMessage()
-									.getStatus() >> 4 == 9) {
+							if ((Tracks.get(numoftracks).getMessage()
+									.getStatus() >> 4) == 9) {
 								Channels[(Tracks.get(numoftracks).getMessage()
 										.getStatus() & 0xF)] = true;
 							}
@@ -534,12 +530,12 @@ public class MidiBanks extends JavaPlugin {
 		if ((args[0].equalsIgnoreCase("list")) & (admin == true)) {
 			String result = "";
 			File[] Files;
-			HashSet names = new HashSet();
-			Stack dirs = new Stack();
+			HashSet<String> names = new HashSet<String>();
+			Stack<File> dirs = new Stack<File>();
 			dirs.push(getDataFolder());
 			try {
 				while (true) {
-					File thisdir = (File) dirs.pop();
+					File thisdir = dirs.pop();
 					i = (Files = thisdir.listFiles()).length;
 					for (File as : Files) {
 						File dircontent = as;
@@ -554,7 +550,7 @@ public class MidiBanks extends JavaPlugin {
 			} catch (EmptyStackException localEmptyStackException) {
 			} catch (NullPointerException localNullPointerException) {
 			}
-			ArrayList sortNames = new ArrayList();
+			ArrayList<String> sortNames = new ArrayList<String>();
 			sortNames.addAll(names);
 			Collections.sort(sortNames);
 			int page = 0;
@@ -573,11 +569,11 @@ public class MidiBanks extends JavaPlugin {
 			}
 			sender.sendMessage("== List of available MIDI files == (page "
 					+ (page + 1) + " of " + (maxpage + 1) + ")");
-			for (int i1 = page * 40; (i1 < (page + 1) * 40)
+			for (int i1 = page * 40; (i1 < ((page + 1) * 40))
 					&& (i1 < sortNames.size());) {
 				result = "";
 				for (int j = 0; (j < 10) && (i1 < sortNames.size()); i1++) {
-					result = result + (String) sortNames.get(i1) + " ";
+					result = result + sortNames.get(i1) + " ";
 
 					j++;
 				}

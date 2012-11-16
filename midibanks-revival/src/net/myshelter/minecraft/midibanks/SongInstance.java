@@ -83,7 +83,6 @@ public class SongInstance {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	protected void nextTick() {
 		if (paused) {
 			return;
@@ -93,19 +92,17 @@ public class SongInstance {
 			over();
 			return;
 		}
-		int lcount = 0;
 		int keyNote = 0;
 		if (window > -1) {
-			keyNote = -6 + 12 * window;
+			keyNote = -6 + (12 * window);
 		}
 
-		for (; (event < music.size() - 1)
+		for (; (event < (music.size() - 1))
 				&& (music.get(event).getTick() <= tick); event += 1) {
-			if (music.get(event).getMessage().getStatus() >> 4 != 9) {
+			if ((music.get(event).getMessage().getStatus() >> 4) != 9) {
 				continue;
 			}
-			@SuppressWarnings({ "unchecked", "rawtypes" })
-			ArrayList<Block> realBlocks = new ArrayList();
+			ArrayList<Block> realBlocks = new ArrayList<Block>();
 			int channel = 0;
 			if (chanCollapse) {
 				realBlocks.add(firstBlock);
@@ -131,7 +128,6 @@ public class SongInstance {
 				continue;
 			}
 			count += 1;
-			lcount++;
 			if (display) {
 				midiSign.setLine(0, String.valueOf(count));
 				midiSign.update();
@@ -143,25 +139,26 @@ public class SongInstance {
 					latestNote[channel] = midiNote;
 				}
 			} else {
-				Integer iaux1 = 0;
+				Integer numofsngnote = 0;
 				if (window < 0) {
-					iaux1 = Integer.valueOf((midiNote + (shift ? 6 : -6)) % 24);
+					numofsngnote = Integer
+							.valueOf((midiNote + (shift ? 6 : -6)) % 24);
 				} else {
-					if ((midiNote >= keyNote) && (midiNote < keyNote + 24)) {
+					if ((midiNote >= keyNote) && (midiNote < (keyNote + 24))) {
 						Integer.valueOf(midiNote - keyNote);
 					} else {
 						if ((repOctave) && (midiNote < keyNote)) {
 							Integer.valueOf((midiNote - 6) % 12);
 						} else {
-							if ((repOctave) && (midiNote >= keyNote + 24)) {
-								Integer.valueOf(12 + (midiNote + 6) % 12);
+							if ((repOctave) && (midiNote >= (keyNote + 24))) {
+								Integer.valueOf(12 + ((midiNote + 6) % 12));
 							} else {
 								Integer.valueOf(-1);
 							}
 						}
 					}
 				}
-				if (iaux1.intValue() < 0) {
+				if (numofsngnote.intValue() < 0) {
 					continue;
 				}
 				for (Block relBlock : realBlocks) {
@@ -173,9 +170,9 @@ public class SongInstance {
 						NoteBlock noteblock = (NoteBlock) relBlock.getState();
 						if (instrument.intValue() > -1) {
 							noteblock.play(instrument.byteValue(),
-									iaux1.byteValue());
+									numofsngnote.byteValue());
 						} else {
-							noteblock.setRawNote(iaux1.byteValue());
+							noteblock.setRawNote(numofsngnote.byteValue());
 							noteblock.update();
 							noteblock.play();
 						}
@@ -192,9 +189,9 @@ public class SongInstance {
 		if ((loop) && (count > 0)) {
 			loopnow = true;
 		}
-		for (SongInstance si : plugin.songs) {
-			if ((si != this)
-					&& (si.midiSign.getBlock().getLocation() == midiSign
+		for (SongInstance songinst : plugin.songs) {
+			if ((songinst != this)
+					&& (songinst.midiSign.getBlock().getLocation() == midiSign
 							.getBlock().getLocation())) {
 				loopnow = false;
 				theend = false;
