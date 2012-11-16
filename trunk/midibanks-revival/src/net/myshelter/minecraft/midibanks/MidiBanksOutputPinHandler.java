@@ -5,7 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 public class MidiBanksOutputPinHandler implements OutputPinHandler {
-	/* 9 */private boolean redstone = true;
+	private boolean redstone = true;
 
 	public MidiBanksOutputPinHandler(boolean redstone) {
 		this.redstone = redstone;
