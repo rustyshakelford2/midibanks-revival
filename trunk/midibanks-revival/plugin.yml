@@ -1,13 +1,12 @@
 name: MidiBanks
 main: net.myshelter.minecraft.midibanks.MidiBanks
 authors: [Protected, jfmherokiller]
-version: 1.8
+version: 1.9
 description: A music helper plugin
 commands:
-  midi:
+  midibanks:
     description: Auxiliary MIDI commands
     usage: /<command> [arguments]
-depend: [Vault]
 permissions:
     midibanks.*:
         description: Gives access to all midibanks commands
