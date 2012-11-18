@@ -28,6 +28,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -49,6 +50,7 @@ public class MidiBanks extends JavaPlugin {
 	boolean novault = false;
 	boolean hasperms = false;
 	boolean opmode = false;
+	boolean noperms = false;
 
 	protected static void dolog(String msg) {
 		MidiBanks.log.info("[MidiBanks] " + msg);
@@ -62,15 +64,18 @@ public class MidiBanks extends JavaPlugin {
 	}
 
 	public boolean Allowed(String Permissionstr, Player player) {
+		if (noperms = true){
+			hasperms = true;
+		}
 		if (opmode == true) {
 			hasperms = player.isOp();
-			return hasperms;
 		}
-		if ((novault == false) && (opmode == false)) {
-			hasperms = player.hasPermission(Permissionstr);
-		}
-		if (novault == true) {
+		if ((novault == false) && (opmode == false) && (noperms == false)) {
 			hasperms = perms.has(player, Permissionstr);
+		}
+		if ((opmode == false) && (noperms == false) && (novault == true)) {
+			
+			hasperms = player.hasPermission(Permissionstr);
 		}
 		return hasperms;
 
@@ -78,6 +83,7 @@ public class MidiBanks extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		this.saveDefaultConfig();
 
 		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
 
@@ -100,13 +106,15 @@ public class MidiBanks extends JavaPlugin {
 		listener = new MidiBanksListeners(this);
 		plistener = new MidiBanksListeners(this);
 		wlistener = new MidiBanksListeners(this);
+		
 		songs = new ArrayList<SongInstance>();
 		disallowAutostart = getConfig().getBoolean("disallow-autostart", false);
 		disallowLoop = getConfig().getBoolean("disallow-loop", false);
 		redstone = getConfig().getBoolean("redstone", true);
 		pinHandler = new MidiBanksOutputPinHandler(redstone);
 		opmode = getConfig().getBoolean("opmode", false);
-		saveDefaultConfig();
+		noperms = getConfig().getBoolean("noperms",false);
+		
 		resetPlayer();
 		getServer().getPluginManager().registerEvents(plistener, this);
 		getServer().getPluginManager().registerEvents(listener, this);
@@ -451,7 +459,7 @@ public class MidiBanks extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (!command.getName().equalsIgnoreCase("midi")) {
+		if (!command.getName().equalsIgnoreCase("midibanks")) {
 			return false;
 		}
 
@@ -462,7 +470,7 @@ public class MidiBanks extends JavaPlugin {
 		boolean admin = false;
 		Player player = (Player) sender;
 		try {
-			if (Allowed("midibanks.cmd", player)) {
+			if ((sender instanceof ConsoleCommandSender) ||Allowed("midibanks.cmd", player)) {
 				admin = true;
 			}
 		} catch (NoClassDefFoundError e) {
@@ -472,9 +480,16 @@ public class MidiBanks extends JavaPlugin {
 			this.player.cancel();
 			resetPlayer();
 		}
+		if ((args[0].equalsIgnoreCase("saveconfig")) & (admin)) {
+			this.saveConfig();
+		}
+		if ((args[0].equalsIgnoreCase("reloadconfig")) & (admin)) {
+			this.reloadConfig();
+		}
+
 		String bychan;
 		int i;
-		// playsong <filename>
+		// play-song <filename>
 		if ((args[0].equalsIgnoreCase("playsong")) & (args.length >= 2)
 				& (admin = true)) {
 			Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
