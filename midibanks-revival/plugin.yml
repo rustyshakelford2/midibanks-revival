@@ -1,7 +1,7 @@
 name: MidiBanks
 main: net.myshelter.minecraft.midibanks.MidiBanks
 authors: [Protected, jfmherokiller]
-version: 1.9
+version: 2.0
 description: A music helper plugin
 commands:
   midibanks:
