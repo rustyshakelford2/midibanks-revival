@@ -25,7 +25,7 @@ public class SongInstance {
 	protected int window = -1;
 	protected boolean repOctave = false;
 	protected Integer instrument = Integer.valueOf(-1);
-
+	boolean legacyBlockFace = BlockFace.NORTH.getModX() == -1;
 	private double tick = 0.0D;
 	private int event = 0;
 	private int count = 0;
@@ -43,17 +43,33 @@ public class SongInstance {
 
 		BlockFace direction = ((org.bukkit.material.Sign) midiSign.getData())
 				.getFacing();
-		if (direction == BlockFace.NORTH) {
-			SideX = 1;
+		if (legacyBlockFace) {
+			if (direction == BlockFace.NORTH) {
+				SideX = 1;
+			}
+			if (direction == BlockFace.SOUTH) {
+				SideX = -1;
+			}
+			if (direction == BlockFace.EAST) {
+				SideZ = 1;
+			}
+			if (direction == BlockFace.WEST) {
+				SideZ = -1;
+			}
 		}
-		if (direction == BlockFace.SOUTH) {
-			SideX = -1;
-		}
-		if (direction == BlockFace.EAST) {
-			SideZ = 1;
-		}
-		if (direction == BlockFace.WEST) {
-			SideZ = -1;
+		if (!legacyBlockFace) {
+			if (direction == BlockFace.NORTH) {
+				SideZ = 1;
+			}
+			if (direction == BlockFace.SOUTH) {
+				SideZ = -1;
+			}
+			if (direction == BlockFace.EAST) {
+				SideX = 1;
+			}
+			if (direction == BlockFace.WEST) {
+				SideX = -1;
+			}
 		}
 		firstBlock = midiSign.getBlock().getRelative(SideX * 2, 0, SideZ * 2);
 
@@ -176,7 +192,8 @@ public class SongInstance {
 							noteblock.update();
 							noteblock.play();
 						}
-					} catch (NullPointerException localNullPointerException) {
+					} 
+					catch (NullPointerException localNullPointerException) {
 					}
 				}
 			}
