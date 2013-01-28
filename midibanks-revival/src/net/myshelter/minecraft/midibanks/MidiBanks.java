@@ -43,7 +43,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
 public class MidiBanks extends JavaPlugin implements Listener {
 	boolean legacyBlockFace = BlockFace.NORTH.getModX() == -1;
 	protected Timer player;
