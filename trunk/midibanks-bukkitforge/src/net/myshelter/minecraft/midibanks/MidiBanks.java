@@ -17,9 +17,6 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Track;
 
-import net.milkbowl.vault.Vault;
-import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -40,8 +37,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 public class MidiBanks extends JavaPlugin implements Listener {
 	boolean legacyBlockFace = BlockFace.NORTH.getModX() == -1;
@@ -53,7 +48,6 @@ public class MidiBanks extends JavaPlugin implements Listener {
 	boolean disallowLoop = false;
 	boolean redstone = true;
 	public OutputPinHandler pinHandler;
-	private Permission perms = null;
 	boolean novault = false;
 	boolean hasperms = false;
 	boolean opmode = false;
@@ -63,13 +57,6 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		MidiBanks.log.info("[MidiBanks] " + msg);
 	}
 
-	public boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> rsp = getServer()
-				.getServicesManager().getRegistration(Permission.class);
-		perms = rsp.getProvider();
-		return perms != null;
-	}
-
 	public boolean Allowed(String Permissionstr, Player player) {
 		if (noperms = true) {
 			hasperms = true;
@@ -77,10 +64,7 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		if (opmode == true) {
 			hasperms = player.isOp();
 		}
-		if ((novault == false) && (opmode == false) && (noperms == false)) {
-			hasperms = perms.has(player, Permissionstr);
-		}
-		if ((opmode == false) && (noperms == false) && (novault == true)) {
+		if ((opmode == false) && (noperms == false)) {
 
 			hasperms = player.hasPermission(Permissionstr);
 		}
@@ -305,21 +289,6 @@ public class MidiBanks extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
-
-		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-
-		if ((vault != null) & (vault instanceof Vault)) {
-			setupPermissions();
-			MidiBanks.log.info(String.format("[%s] Hooked %s %s",
-					getDescription().getName(), vault.getDescription()
-							.getName(), vault.getDescription().getVersion()));
-		} else {
-			MidiBanks.log
-					.warning(String
-							.format("[%s] Vault was _NOT_ found! Falling back to bukkit permissions or ops or no perms",
-									getDescription().getName()));
-			novault = true;
-		}
 		if (!getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
@@ -339,8 +308,8 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		if (!disallowAutostart) {
 		MidiBanks.dolog("Auto-starting A banks in currently loaded chunks...");
 		int count = 0;
-		for (World worldlist : getServer().getWorlds()) {
-			for (Chunk loadedChunkslist : worldlist.getLoadedChunks()) {
+		for (Object worldlist : getServer().getWorlds()) {
+			for (Chunk loadedChunkslist : ((World) worldlist).getLoadedChunks()) {
 				for (BlockState cbs : loadedChunkslist.getTileEntities()) {
 					if (cbs.getBlock().getType() == Material.WALL_SIGN) {
 						org.bukkit.block.Sign midiSign = (org.bukkit.block.Sign) cbs;
