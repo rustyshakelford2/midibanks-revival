@@ -1,4 +1,4 @@
-disallow-autostart: false
+disallow-autostart: true
 disallow-loop: false
 redstone: true
 opmode: false

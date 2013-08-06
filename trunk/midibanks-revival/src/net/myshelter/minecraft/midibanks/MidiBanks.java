@@ -63,6 +63,13 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		MidiBanks.log.info("[MidiBanks] " + msg);
 	}
 
+	public void resetPlayer() {
+		songs.clear();
+		player = new Timer();
+		MidiPlayerStep np = new MidiPlayerStep(this);
+		player.schedule(np, 20L, 20L);
+	}
+
 	public boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> rsp = getServer()
 				.getServicesManager().getRegistration(Permission.class);
@@ -92,6 +99,16 @@ public class MidiBanks extends JavaPlugin implements Listener {
 	// //Player Event
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			if (event.getClickedBlock().getType() != Material.WALL_SIGN) {
+				return;
+			}
+			Sign midiSign = (Sign) event.getClickedBlock().getState();
+			if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) {
+				return;
+			}
+			stopMusic(midiSign);
+		}
 
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (event.getClickedBlock().getType() != Material.WALL_SIGN) {
@@ -119,22 +136,6 @@ public class MidiBanks extends JavaPlugin implements Listener {
 			if (rc == null) {
 				learnMusic(midiSign);
 			}
-		}
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-			if (event.getClickedBlock().getType() != Material.WALL_SIGN) {
-				return;
-			}
-			Sign midiSign = (Sign) event.getClickedBlock().getState();
-			if (!midiSign.getLine(1).equalsIgnoreCase("[MIDI]")) {
-				return;
-			}
-			try {
-				if (Allowed("midibanks.can-use", event.getPlayer())) {
-					return;
-				}
-			} catch (NoClassDefFoundError e) {
-			}
-			stopMusic(midiSign);
 		}
 	}
 
@@ -250,6 +251,7 @@ public class MidiBanks extends JavaPlugin implements Listener {
 			return;
 		}
 		checkSigns = new ArrayList<Block>();
+		if (legacyBlockFace) {
 		if ((event.getBlock().getRelative(1, 0, 0).getType() == Material.WALL_SIGN)
 				&& (((org.bukkit.material.Sign) event.getBlock()
 						.getRelative(1, 0, 0).getState().getData()).getFacing() != BlockFace.NORTH)) {
@@ -271,6 +273,31 @@ public class MidiBanks extends JavaPlugin implements Listener {
 						.getRelative(0, 0, -1).getState().getData())
 						.getFacing() != BlockFace.WEST)) {
 			checkSigns.add(event.getBlock().getRelative(0, 0, -1));
+		}
+		}
+		if (!legacyBlockFace) {
+			if ((event.getBlock().getRelative(0, 0, 1).getType() == Material.WALL_SIGN)
+					&& (((org.bukkit.material.Sign) event.getBlock()
+							.getRelative(0, 0, 1).getState().getData()).getFacing() != BlockFace.NORTH)) {
+				checkSigns.add(event.getBlock().getRelative(1, 0, 0));
+			}
+			if ((event.getBlock().getRelative(0, 0, -1).getType() == Material.WALL_SIGN)
+					&& (((org.bukkit.material.Sign) event.getBlock()
+							.getRelative(0, 0, -1).getState().getData())
+							.getFacing() != BlockFace.SOUTH)) {
+				checkSigns.add(event.getBlock().getRelative(0, 0, -1));
+			}
+			if ((event.getBlock().getRelative(1, 0, 0).getType() == Material.WALL_SIGN)
+					&& (((org.bukkit.material.Sign) event.getBlock()
+							.getRelative(1, 0, 0).getState().getData()).getFacing() != BlockFace.EAST)) {
+				checkSigns.add(event.getBlock().getRelative(1, 0, 0));
+			}
+			if ((event.getBlock().getRelative(-1, 0, 0).getType() == Material.WALL_SIGN)
+					&& (((org.bukkit.material.Sign) event.getBlock()
+							.getRelative(-1, 0, 0).getState().getData())
+							.getFacing() != BlockFace.WEST)) {
+				checkSigns.add(event.getBlock().getRelative(-1, 0, 0));
+			}
 		}
 		for (Block cb : checkSigns) {
 			org.bukkit.block.Sign midiSign = (org.bukkit.block.Sign) cb
@@ -363,13 +390,6 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		player.cancel();
 		MidiBanks.log.info(String.format("[%s] Disabled Version %s",
 				getDescription().getName(), getDescription().getVersion()));
-	}
-
-	public void resetPlayer() {
-		songs.clear();
-		player = new Timer();
-		MidiPlayerStep np = new MidiPlayerStep(this);
-		player.schedule(np, 20L, 20L);
 	}
 
 	public File getMidiFile(String name) {
