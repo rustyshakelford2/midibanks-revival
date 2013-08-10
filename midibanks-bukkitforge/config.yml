@@ -1,0 +1,5 @@
+disallow-autostart: true
+disallow-loop: false
+redstone: true
+opmode: false
+noperms: false

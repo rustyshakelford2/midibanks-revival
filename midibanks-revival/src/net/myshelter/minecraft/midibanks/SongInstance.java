@@ -192,8 +192,7 @@ public class SongInstance {
 							noteblock.update();
 							noteblock.play();
 						}
-					} 
-					catch (NullPointerException localNullPointerException) {
+					} catch (NullPointerException localNullPointerException) {
 					}
 				}
 			}
