@@ -43,6 +43,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
 public class MidiBanks extends JavaPlugin implements Listener {
 	boolean legacyBlockFace = BlockFace.NORTH.getModX() == -1;
 	protected Timer player;
@@ -94,7 +95,7 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		return hasperms;
 	}
 
-	///EVENT
+	// /EVENT
 	// AREA
 	// //Player Event
 	@EventHandler
@@ -252,33 +253,36 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		}
 		checkSigns = new ArrayList<Block>();
 		if (legacyBlockFace) {
-		if ((event.getBlock().getRelative(1, 0, 0).getType() == Material.WALL_SIGN)
-				&& (((org.bukkit.material.Sign) event.getBlock()
-						.getRelative(1, 0, 0).getState().getData()).getFacing() != BlockFace.NORTH)) {
-			checkSigns.add(event.getBlock().getRelative(1, 0, 0));
-		}
-		if ((event.getBlock().getRelative(-1, 0, 0).getType() == Material.WALL_SIGN)
-				&& (((org.bukkit.material.Sign) event.getBlock()
-						.getRelative(-1, 0, 0).getState().getData())
-						.getFacing() != BlockFace.SOUTH)) {
-			checkSigns.add(event.getBlock().getRelative(-1, 0, 0));
-		}
-		if ((event.getBlock().getRelative(0, 0, 1).getType() == Material.WALL_SIGN)
-				&& (((org.bukkit.material.Sign) event.getBlock()
-						.getRelative(0, 0, 1).getState().getData()).getFacing() != BlockFace.EAST)) {
-			checkSigns.add(event.getBlock().getRelative(0, 0, 1));
-		}
-		if ((event.getBlock().getRelative(0, 0, -1).getType() == Material.WALL_SIGN)
-				&& (((org.bukkit.material.Sign) event.getBlock()
-						.getRelative(0, 0, -1).getState().getData())
-						.getFacing() != BlockFace.WEST)) {
-			checkSigns.add(event.getBlock().getRelative(0, 0, -1));
-		}
+			if ((event.getBlock().getRelative(1, 0, 0).getType() == Material.WALL_SIGN)
+					&& (((org.bukkit.material.Sign) event.getBlock()
+							.getRelative(1, 0, 0).getState().getData())
+							.getFacing() != BlockFace.NORTH)) {
+				checkSigns.add(event.getBlock().getRelative(1, 0, 0));
+			}
+			if ((event.getBlock().getRelative(-1, 0, 0).getType() == Material.WALL_SIGN)
+					&& (((org.bukkit.material.Sign) event.getBlock()
+							.getRelative(-1, 0, 0).getState().getData())
+							.getFacing() != BlockFace.SOUTH)) {
+				checkSigns.add(event.getBlock().getRelative(-1, 0, 0));
+			}
+			if ((event.getBlock().getRelative(0, 0, 1).getType() == Material.WALL_SIGN)
+					&& (((org.bukkit.material.Sign) event.getBlock()
+							.getRelative(0, 0, 1).getState().getData())
+							.getFacing() != BlockFace.EAST)) {
+				checkSigns.add(event.getBlock().getRelative(0, 0, 1));
+			}
+			if ((event.getBlock().getRelative(0, 0, -1).getType() == Material.WALL_SIGN)
+					&& (((org.bukkit.material.Sign) event.getBlock()
+							.getRelative(0, 0, -1).getState().getData())
+							.getFacing() != BlockFace.WEST)) {
+				checkSigns.add(event.getBlock().getRelative(0, 0, -1));
+			}
 		}
 		if (!legacyBlockFace) {
 			if ((event.getBlock().getRelative(0, 0, 1).getType() == Material.WALL_SIGN)
 					&& (((org.bukkit.material.Sign) event.getBlock()
-							.getRelative(0, 0, 1).getState().getData()).getFacing() != BlockFace.NORTH)) {
+							.getRelative(0, 0, 1).getState().getData())
+							.getFacing() != BlockFace.NORTH)) {
 				checkSigns.add(event.getBlock().getRelative(1, 0, 0));
 			}
 			if ((event.getBlock().getRelative(0, 0, -1).getType() == Material.WALL_SIGN)
@@ -289,7 +293,8 @@ public class MidiBanks extends JavaPlugin implements Listener {
 			}
 			if ((event.getBlock().getRelative(1, 0, 0).getType() == Material.WALL_SIGN)
 					&& (((org.bukkit.material.Sign) event.getBlock()
-							.getRelative(1, 0, 0).getState().getData()).getFacing() != BlockFace.EAST)) {
+							.getRelative(1, 0, 0).getState().getData())
+							.getFacing() != BlockFace.EAST)) {
 				checkSigns.add(event.getBlock().getRelative(1, 0, 0));
 			}
 			if ((event.getBlock().getRelative(-1, 0, 0).getType() == Material.WALL_SIGN)
@@ -364,25 +369,27 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		MidiBanks.dolog("Enabled! Version is " + getDescription().getVersion());
 
 		if (!disallowAutostart) {
-		MidiBanks.dolog("Auto-starting A banks in currently loaded chunks...");
-		int count = 0;
-		for (World worldlist : getServer().getWorlds()) {
-			for (Chunk loadedChunkslist : worldlist.getLoadedChunks()) {
-				for (BlockState cbs : loadedChunkslist.getTileEntities()) {
-					if (cbs.getBlock().getType() == Material.WALL_SIGN) {
-						org.bukkit.block.Sign midiSign = (org.bukkit.block.Sign) cbs;
-						if ((!midiSign.getLine(1).equalsIgnoreCase("[MIDI]"))
-								|| (!midiSign.getLine(3).contains("A"))) {
-							continue;
+			MidiBanks
+					.dolog("Auto-starting A banks in currently loaded chunks...");
+			int count = 0;
+			for (World worldlist : getServer().getWorlds()) {
+				for (Chunk loadedChunkslist : worldlist.getLoadedChunks()) {
+					for (BlockState cbs : loadedChunkslist.getTileEntities()) {
+						if (cbs.getBlock().getType() == Material.WALL_SIGN) {
+							org.bukkit.block.Sign midiSign = (org.bukkit.block.Sign) cbs;
+							if ((!midiSign.getLine(1)
+									.equalsIgnoreCase("[MIDI]"))
+									|| (!midiSign.getLine(3).contains("A"))) {
+								continue;
+							}
+							learnMusic(midiSign);
+							count++;
 						}
-						learnMusic(midiSign);
-						count++;
 					}
 				}
 			}
+			MidiBanks.dolog("Done; found " + count + " A banks.");
 		}
-		MidiBanks.dolog("Done; found " + count + " A banks.");
-	}
 	}
 
 	@Override
@@ -444,21 +451,21 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		boolean repOctave = false;
 
 		ArrayList<Block> checkRedstone = new ArrayList<Block>();
-		if(legacyBlockFace) {
-		if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.NORTH) {
-			checkRedstone.add(midiSign.getBlock().getRelative(-1, 0, 0));
+		if (legacyBlockFace) {
+			if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.NORTH) {
+				checkRedstone.add(midiSign.getBlock().getRelative(-1, 0, 0));
+			}
+			if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.SOUTH) {
+				checkRedstone.add(midiSign.getBlock().getRelative(1, 0, 0));
+			}
+			if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.EAST) {
+				checkRedstone.add(midiSign.getBlock().getRelative(0, 0, -1));
+			}
+			if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.WEST) {
+				checkRedstone.add(midiSign.getBlock().getRelative(0, 0, 1));
+			}
 		}
-		if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.SOUTH) {
-			checkRedstone.add(midiSign.getBlock().getRelative(1, 0, 0));
-		}
-		if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.EAST) {
-			checkRedstone.add(midiSign.getBlock().getRelative(0, 0, -1));
-		}
-		if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.WEST) {
-			checkRedstone.add(midiSign.getBlock().getRelative(0, 0, 1));
-		}
-		}
-		if(!legacyBlockFace) {
+		if (!legacyBlockFace) {
 			if (((org.bukkit.material.Sign) midiSign.getData()).getFacing() == BlockFace.NORTH) {
 				checkRedstone.add(midiSign.getBlock().getRelative(0, 0, -1));
 			}
@@ -507,21 +514,21 @@ public class MidiBanks extends JavaPlugin implements Listener {
 					Block SelectedBlock = null;
 					int sx = 0;
 					int sz = 0;
-					if (legacyBlockFace){
-					if (direction == BlockFace.NORTH) {
-						sx = -1;
+					if (legacyBlockFace) {
+						if (direction == BlockFace.NORTH) {
+							sx = -1;
+						}
+						if (direction == BlockFace.SOUTH) {
+							sx = 1;
+						}
+						if (direction == BlockFace.EAST) {
+							sz = 1;
+						}
+						if (direction == BlockFace.WEST) {
+							sz = -1;
+						}
 					}
-					if (direction == BlockFace.SOUTH) {
-						sx = 1;
-					}
-					if (direction == BlockFace.EAST) {
-						sz = 1;
-					}
-					if (direction == BlockFace.WEST) {
-						sz = -1;
-					}
-					}
-					if (!legacyBlockFace){
+					if (!legacyBlockFace) {
 						if (direction == BlockFace.NORTH) {
 							sz = -1;
 						}
