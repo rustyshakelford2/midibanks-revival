@@ -1,7 +1,11 @@
 package net.myshelter.minecraft.midibanks;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EmptyStackException;
@@ -43,8 +47,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
 public class MidiBanks extends JavaPlugin implements Listener {
+	String dropboxurlpt1 = "https://dl.dropboxusercontent.com/u/";
 	boolean legacyBlockFace = BlockFace.NORTH.getModX() == -1;
 	protected Timer player;
 	protected ArrayList<SongInstance> songs;
@@ -70,7 +74,14 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		MidiPlayerStep np = new MidiPlayerStep(this);
 		player.schedule(np, 20L, 20L);
 	}
-
+	public void getmidifilegas (String userid,String filename,File filedirectory) throws Exception {
+		
+		URL obj = new URL(dropboxurlpt1 + userid + "/" + filename + ".mid");
+	    ReadableByteChannel rbc = Channels.newChannel(obj.openStream());
+	    FileOutputStream fos = new FileOutputStream(filedirectory +"/"+ filename +".mid");
+	    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+	    fos.close();
+	}
 	public boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> rsp = getServer()
 				.getServicesManager().getRegistration(Permission.class);
@@ -162,6 +173,10 @@ public class MidiBanks extends JavaPlugin implements Listener {
 	// //Chunk Load Event
 	@EventHandler
 	public void onChunkLoaded(ChunkLoadEvent event) {
+		if(event == null)
+		{
+			return;
+		}
 		if (disallowAutostart) {
 			return;
 		}
@@ -176,7 +191,6 @@ public class MidiBanks extends JavaPlugin implements Listener {
 			}
 		}
 	}
-
 	// //Redstone Event
 	@EventHandler
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
@@ -502,6 +516,7 @@ public class MidiBanks extends JavaPlugin implements Listener {
 			try {
 				File midiFile = getMidiFile(midiSign.getLine(2));
 				if (midiFile == null) {
+					
 					return;
 				}
 
@@ -757,18 +772,18 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		if ((args[0].equalsIgnoreCase("reloadconfig")) & (admin)) {
 			reloadConfig();
 		}
+		if ((args[0].equalsIgnoreCase("dropbh")) & (args.length >= 2) & (admin == true))
+		{
+			try {
+				getmidifilegas(args[1], args[2], getDataFolder());
+			} catch (Exception e) {
+				log.info("http get failed");
+			}
 
+		}
+		
 		String bychan;
 		int i;
-		// play-song <filename>
-		if ((args[0].equalsIgnoreCase("playsong")) & (args.length >= 2)
-				& (admin = true)) {
-			Pattern pFileName = Pattern.compile("^[A-Za-z0-9_-]+$");
-			Matcher mFileName = pFileName.matcher(args[1]);
-			if (mFileName.find()) {
-
-			}
-		}
 		// channels <filename>
 		if ((args[0].equalsIgnoreCase("channels")) & (args.length >= 2)
 				& (admin == true)) {
