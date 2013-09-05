@@ -772,15 +772,14 @@ public class MidiBanks extends JavaPlugin implements Listener {
 		if ((args[0].equalsIgnoreCase("reloadconfig")) & (admin)) {
 			reloadConfig();
 		}
-		if ((args[0].equalsIgnoreCase("dropbh")) & (args.length >= 2) & (admin == true))
-		{
-			try {
-				getmidifilegas(args[1], args[2], getDataFolder());
-			} catch (Exception e) {
-				log.info("http get failed");
-			}
-
-		}
+		//if ((args[0].equalsIgnoreCase("dropbh")) & (args.length >= 2) & (admin == true))
+		//{
+		//	try {
+		//		getmidifilegas(args[1], args[2], getDataFolder());
+		//	} catch (Exception e) {
+		//		log.info("http get failed");
+		//	}
+		//}
 		
 		String bychan;
 		int i;
